@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r klippy, echo=FALSE, include=TRUE}
-# remotes::install_github("rlesur/klippy")
+#remotes::install_github("rlesur/klippy")
 klippy::klippy('')
 ```
 
@@ -59,7 +59,7 @@ Concurrency is **not** simply a synonym for multiple partnerships. The phrase �
 In the following examples, let the red line represent the time that person A is in a sexual relationship with person B, and the blue line represent the time that person A is in a sexual relationship with person C. All three cases represent Person A having multiple (specifically two) partners.  But only in the latter two cases does Person A have concurrent partners.  Sometimes researchers distinguish between these two forms of concurrency by referring to them as “transitional concurrency” and “embedded concurrency”.
 
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("concurrency.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/concurrency.png")
 ```
 
 Having multiple sexual partners will typically increase the potential for a person to acquire or transmit an STI, when compared to the same person having just one partner.  This is true regardless of whether those multiple partners are sequential or concurrent.  But **the importance of concurrent partnerships is that they greatly increase the potential for an STI to spread, above and beyond multiple partnerships that are sequential**.  As we progress through the exercises on this website, we will explore how and why this is, and what the implications are.
@@ -106,7 +106,7 @@ In this exercise, we will focus on two people. Let’s call them Sam and Chris. 
 We can picture this scenario, with each person’s first partner colored red and second partner blue, as follows:
 
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("samandchris.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/samandchris.png")
 ```
 
 Notice all of the components that we have kept identical between the two cases: Sam and Chris each have the same number of new partners during the six-month period; they each have the same number of sex acts with each partner; their relationships each last the same length; and their sex occurs on average no earlier or later than each other (that is, both have their sex acts evenly centered around the beginning of June).
@@ -202,7 +202,7 @@ Note that we made some assumptions about Chris's and Sam's sexual partnerships a
 In [Exercise 1](#exercise1), we set up the example so that Chris and Sam were similar on as many important metrics as possible, while still allowing Chris to have concurrent relationships, and Sam to have sequential relationships.  Recall the example:
 
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("samandchris.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/samandchris.png")
 ```
 
 Items that were held equal across Chris and Sam include:
@@ -224,14 +224,14 @@ Mathematically, one cannot have everything on both lists above match up between 
 
 ```{r, echo=FALSE, out.width="500px"}
 # 400px?
-knitr::include_graphics("samandchrisleft.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/samandchrisleft.png")
 ```
 
 #### Alternate Scenario 2. Sam and Chris complete sex at the same time, and Chris's sexual acts occur later than Sam's on average {-}
 
 ```{r, echo=FALSE, out.width="500px"}
 # 400px?
-knitr::include_graphics("samandchrisright.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/samandchrisright.png")
 ```
 
 #### Alternate Scenario 3. Sam and Chris begin and complete sex at the same time; Chris's relationships are twice as long as Sam's, but _Chris has only half as many coital acts with each partner as Sam does_.  Thus, overall Chris and Sam have the same total frequency of sex. {-}
@@ -240,7 +240,7 @@ This scenario is an example of **coital dilution**, wherein Chris has only half 
 
 ```{r, echo=FALSE, out.width="500px"}
 # 400px?
-knitr::include_graphics("samandchriscoitaldilution.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/samandchriscoitaldilution.png")
 ```
 
 Note that across all scenarios, one of the things on which we maintain consistency is the total number of coital acts had by Sam and Chris.  Reducing one relative to the other makes it impossible  to identify the effect of concurrency itself, since a reduction in sex will in and of itself have a major impact on disease transmission.
@@ -255,26 +255,26 @@ Now imagine a whole group of people – let’s say there are 24 of them.  And e
 
 #### Scenario 1: In this scenario, everyone begins with 1 partner, with whom they stay sexually active for 3 months {-}
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("Pop1.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/Pop1.png")
 ```
 
 After that time, they all end their existing partnerships, and start a new 3-month relationship, as follows:
 
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("Pop2.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/Pop2.png")
 ```
 
 #### Scenario 2: In this scenario, everyone has two partnerships concurrently, in a single giant circle, which they maintain for 3 months {-}
 
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("Pop3.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/Pop3.png")
 ```
  
 
 After this, everyone spends the next 3 months with no partners at all.
 
 ```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("Pop4.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/Pop4.png")
 ```
 
 ### Questions & Answers {.tabset}
@@ -345,7 +345,7 @@ For those readers who would like a refresher on the relevant rules of probabilit
 Let us imagine that Sam has sex 200 times: first 100 times with the red partner, and then 100 times with the blue partner. This can be depicted as:
 
 ```{r, echo=FALSE, out.width="800px"}
-knitr::include_graphics("samcoital.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/samcoital.png")
 ```
 
 **Question 1**: If the red partner is infected and the blue is not, what is the probability that Sam gets infected from the red partner?
@@ -363,7 +363,7 @@ knitr::include_graphics("samcoital.png")
 Now let us imagine that Chris has sex 200 times: once with the red partner, then once with the blue partner, then once with red, then blue, and back and forth 100 times for a total of 200 sex acts.
 
 ```{r, echo=FALSE, out.width="800px"}
-knitr::include_graphics("chriscoital.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/chriscoital.png")
 ```
 
 **Question 7**: If the red partner is infected and the blue is not, what is the probability that Chris gets infected from the red partner?
@@ -680,7 +680,7 @@ In addition, we will model sexual relationships within this population at any gi
 Relationships will form and break over time.  To keep the model as simple as possible, we will assume that all existing relationships have the same probability of dissolving. As with the previous exercises, we will implement multiple scenarios for the sake of comparison, with either concurrency present or prohibited.  In fact, this exercise allows the user to turn concurrency on and off separately for women and for men, so that we can see how disease prevalence differs when both sexes, one sex, or neither sex are allowed to have concurrent partnerships. Note that it is indeed mathematically possible for the two sexes to have different levels of concurrency, and for one to have high levels and the other to have none at all.  For instance, imagine a very simple sexual network at one moment in time:
 
 ```{r, echo=FALSE, out.width="400px"}
-knitr::include_graphics("sexspecificconcurrency.png")
+knitr::include_graphics("ConcurrencyTutorialFiles/sexspecificconcurrency.png")
 ```
 
 In this network at this time, 50% of men (1 of 2) have concurrent partners, while 0% of women (0 of 2) do. However, the mean number of ties for men (1 per man, averaged from 2 ties for male 1 and 0 ties for male 2) equals the mean number of ties per woman (1 per woman, averaged from 1 tie for female 1 and 1 tie for female 2).
