@@ -1,40 +1,12 @@
 ---
 title: "Concurrency Tutorial"
-output: 
-  html_document:
-    toc: true
-    number_sections: true
-    toc_float: true
-
+subtitle: "How relational concurrency does (and does not) shape HIV and STI epidemics"
+author:
+  - Steven M. Goodreau
+  - Samuel M. Jenness
+  - Martina Morris
+date: last-modified
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
-
-```{r klippy, echo=FALSE, include=TRUE}
-#remotes::install_github("rlesur/klippy")
-klippy::klippy('')
-```
-
-<style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
-</style>
-
-<style>
-div.green { background-color:#C4F5E2; border-radius: 5px; padding: 20px;}
-</style>
-
-
-```{r, include=FALSE, eval=FALSE}
-# Just in case we needed blue or green boxes
-<div class = "green">
-
-- This is my first conclusion
-- This is my second conclusion
-
-</div>
-```
 
 # Welcome 
 
@@ -58,9 +30,7 @@ Concurrency is **not** simply a synonym for multiple partnerships. The phrase �
 
 In the following examples, let the red line represent the time that person A is in a sexual relationship with person B, and the blue line represent the time that person A is in a sexual relationship with person C. All three cases represent Person A having multiple (specifically two) partners.  But only in the latter two cases does Person A have concurrent partners.  Sometimes researchers distinguish between these two forms of concurrency by referring to them as “transitional concurrency” and “embedded concurrency”.
 
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/concurrency.png")
-```
+![Timeline diagrams contrasting sequential and concurrent partnerships](ConcurrencyTutorialFiles/concurrency.png){width="500px"}
 
 Having multiple sexual partners will typically increase the potential for a person to acquire or transmit an STI, when compared to the same person having just one partner.  This is true regardless of whether those multiple partners are sequential or concurrent.  But **the importance of concurrent partnerships is that they greatly increase the potential for an STI to spread, above and beyond multiple partnerships that are sequential**.  As we progress through the exercises on this website, we will explore how and why this is, and what the implications are.
 
@@ -78,7 +48,7 @@ The exercises on this website explain why this is so.
 
 ## What this website is (and is not)
 
-The body of literature on concurrency is large, and our goal is not to summarize all of it (although we do provide links to some of it in the [ConcurrencyResources More Resources] section). That literature has two major research paradigms within it: 
+The body of literature on concurrency is large, and our goal is not to summarize all of it (although we do provide links to some of it in the [More Resources](#moreresources) section). That literature has two major research paradigms within it: 
 
 * using mathematical models to demonstrate the potential impact of concurrency
 
@@ -105,18 +75,18 @@ In this exercise, we will focus on two people. Let’s call them Sam and Chris. 
 
 We can picture this scenario, with each person’s first partner colored red and second partner blue, as follows:
 
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/samandchris.png")
-```
+![Partnership timelines for sequential Sam and concurrent Chris](ConcurrencyTutorialFiles/samandchris.png){width="500px"}
 
 Notice all of the components that we have kept identical between the two cases: Sam and Chris each have the same number of new partners during the six-month period; they each have the same number of sex acts with each partner; their relationships each last the same length; and their sex occurs on average no earlier or later than each other (that is, both have their sex acts evenly centered around the beginning of June).
 
-### Questions & Answers {.tabset}
+### Questions & Answers
+
+::: {.panel-tabset}
 
 #### Questions
 Now, think about each of the following questions. For each question, decide on one of four answers:  **Sam** is more likely; **Chris** is more likely; **Both** are equally likely; or perhaps **Not Enough Information**.
 
-##### Scenario 1: The blue partners are each infected with the same STI, while Sam, Chris and the red partners are uninfected. {-}
+##### Scenario 1: The blue partners are each infected with the same STI, while Sam, Chris and the red partners are uninfected.
 
 **Question 1**. Who is more likely to get infected—Sam or Chris?
 
@@ -125,7 +95,7 @@ Now, think about each of the following questions. For each question, decide on o
 **Question 3**. If Sam and Chris do get infected, who is likely to do so sooner?
 <br>
 
-##### Scenario 2: The red partners are each infected with the same STI, while Sam, Chris and the blue partners are uninfected. {-}
+##### Scenario 2: The red partners are each infected with the same STI, while Sam, Chris and the blue partners are uninfected.
 
 **Question 1**. Who is more likely to get infected—Sam or Chris?
 
@@ -137,7 +107,7 @@ Now, think about each of the following questions. For each question, decide on o
 
 #### Answers
 
-##### Scenario 1: The blue partners are each infected with the same STI, while Sam, Chris and the red partners are uninfected. {-}
+##### Scenario 1: The blue partners are each infected with the same STI, while Sam, Chris and the red partners are uninfected.
 
 **Question 1**: Who is more likely to get infected—Sam or Chris? 
 **Both are equally likely**. Sam and Chris can each be infected by their blue partner only.  And they each have the same amount and type of exposure (sex acts) with them.
@@ -149,7 +119,7 @@ Let us call this phenomenon “**backwards transmission**.” The word “backwa
 **Question 3**: If Sam and Chris do get infected, who is likely to do so sooner?
 **Chris**. Chris's window of exposure to the blue partner occurs earlier than Sam's, even though overall (across both partners) Chris does not have sex any earlier than Sam does on average.   We will call this effect “**accelerated acquisition.**”
 
-##### Scenario 2: The red partners are each infected with the same STI, while Sam, Chris and the blue partners are uninfected. {-}
+##### Scenario 2: The red partners are each infected with the same STI, while Sam, Chris and the blue partners are uninfected.
 
 **Question 1**: Who is more likely to get infected—Sam or Chris? 
 **Both are equally likely**. Sam and Chris can each be infected by their red partner only.  And they each have the same amount and type of exposure (sex acts) with them.
@@ -169,13 +139,15 @@ So, the answer to this question may be Sam, or it may be Chris, depending on the
 **Question 4:** If Sam and Chris do infect their blue partner, who is likely to do so sooner in time? Sooner after getting infected themselves? 
 **Chris**, on both counts.  For the first half of the question, we simply note that the blue partner's exposure period to Chris occurs earlier in time than their exposure period to Sam. For the second half of the question, we use the same basic logic as in the description of acute infectivity above (under Scenario 2, Question 2). If Sam and Chris are each infected at the beginning of their relationships with red, the range over which Sam might infect blue is 3-6 months later, but for Chris, it’s 2-5 months later.  If Sam and Chris are each infected during their second month with red, the range over which Sam might infect blue is 2-5 months later, but for Chris, it’s 1-4 months later.  And so on.  Although the logic is roughly the same as for the “acute infectivity” process, the implication here is slightly different.  There, we were focused on the fact that Chris would be more likely to be highly infectious when encountering blue than Sam would.  But here we see that even in the absence of any mechanism that causes greater infectivity during a short period after infection, with concurrency an STI can “hop” along chains of three people (from person A to B to C) on average more quickly than it could when people are practicing sequentially monogamous relationships of the same length. We will call this phenomenon “**path acceleration.**”  So despite the fact that Sam was probably infected earlier than Chris was (as we saw in the answer to the previous question), the disease ends up moving further along to another member of the population sooner via Chris.  This is because sequential monogamy causes the infection to remain "locked" in the partnership between Sam and the red partner until that relationship ends; this does not happen with Chris and the red partner because of concurrency.
 
+:::
+
 ### Discussion
 
 We have explored an example in which Sam and Chris each have the same number of new partners during the six-month period; they each have the same number of sex acts with each partner; their relationships each last the same length; and their sex acts occur on average no earlier or later than each other's (that is, both have their sex acts evenly centered around the same time point). Below, and in later exercises, you will have the opportunity to consider other models.  But, for now, **what do the answers we saw on the previous page tell us about the effects of concurrency in this scenario? A few very important things:**
 
 Sam and Chris had the exact same risk of getting infected from their red partner. They also had the exact same risk of getting infected from their blue partner. Thus, Sam and Chris had the exact same risk of getting infected overall.
 
-#### INSIGHT 1: All else being equal, whether one’s partnerships are sequential or concurrent makes no difference whatsoever to one’s risk of acquiring an STI. {-}
+#### INSIGHT 1: All else being equal, whether one’s partnerships are sequential or concurrent makes no difference whatsoever to one’s risk of acquiring an STI.
 
 On the other hand, if they do get infected, there are three different processes that affect how likely they are to transmit to someone else.  Two of these increase Chris’s probability of transmitting relative to Sam’s, and one increases Sam’s relative to Chris’s.  These are:
 
@@ -187,11 +159,11 @@ In terms of backwards transmission, the distinction between concurrency and sequ
 
 In terms of forward transmission: there are two different effects, which work in opposite directions, so the picture is less consistent. Since we are only exploring conceptually right now, we cannot be much more precise than this. However, now that we have identified the three effects, we can also provide some foreshadowing to [Exercise 3](#exercise3), which explores the same effects more mathematically.  In the range of scenarios we consider there, we will see that the effect of backwards transmission always outweighs that of missed forward transmission. That is, when one combines their two effects, Chris is always more likely to transmit than Sam, although the exact difference depends on the details. More generally, the broader literature on concurrency shows that across ranges of realistic diseases and relational dynamics, the collective effect of these various pathways strongly favors transmission by those with concurrent partners over sequential.
 
-#### INSIGHT 2. All else being equal, whether one’s partnerships are sequential or concurrent has three effects on one’s probability of transmitting an STI.  The collective effect of these generally favors transmission by the person with concurrent partners, and sometimes by a very large amount, depending on the level of infectiousness and its change over time. {-}
+#### INSIGHT 2. All else being equal, whether one’s partnerships are sequential or concurrent has three effects on one’s probability of transmitting an STI.  The collective effect of these generally favors transmission by the person with concurrent partners, and sometimes by a very large amount, depending on the level of infectiousness and its change over time.
 
 Both Sam and Chris can acquire from red and transmit to blue.  But even here, in Chris’s case the STI is capable of spreading more quickly through this path than in Sam’s case.  In Sam’s case, the STI must lose time being “locked” in the monogamous partnership, waiting for it to end and for the next one to begin; the infection does not need to experience the same waiting period with Chris. If the blue partner did have other partners, then the infection would be able to proceed further on through the network more quickly.
 
-#### INSIGHT 3: Sequential partnerships lead to STIs spending some amount of time being “locked” in a partnership; concurrent partnerships allow it to move along a chain of three people (and then perhaps on from there) more quickly. {-}
+#### INSIGHT 3: Sequential partnerships lead to STIs spending some amount of time being “locked” in a partnership; concurrent partnerships allow it to move along a chain of three people (and then perhaps on from there) more quickly.
 
 In [Exercise 1](#exercise1), and in the insights that resulted from it, we were largely focused on the question of concurrency’s effect at the local level, specifically among an individual and two of their (sequential or concurrent) partners. In reality, of course, these three people are embedded in much larger social networks, something we began to hint at with Insight 3. Any of the three may have additional partners, either concurrently or subsequently; those partners will have other partners, and so on. Differences at the local level have the potential to aggregate up to the population level in different ways. So now that we have some insight into how concurrency affects transmission locally, let us consider in [Exercise 2](#exercise2) how much this can matter to the population as a whole.
 
@@ -201,9 +173,7 @@ Note that we made some assumptions about Chris's and Sam's sexual partnerships a
 
 In [Exercise 1](#exercise1), we set up the example so that Chris and Sam were similar on as many important metrics as possible, while still allowing Chris to have concurrent relationships, and Sam to have sequential relationships.  Recall the example:
 
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/samandchris.png")
-```
+![Partnership timelines for sequential Sam and concurrent Chris](ConcurrencyTutorialFiles/samandchris.png){width="500px"}
 
 Items that were held equal across Chris and Sam include:
 
@@ -220,28 +190,19 @@ However, some things needed to be different.  Obviously, we wanted one to have c
 
 Mathematically, one cannot have everything on both lists above match up between Chris and Sam when Chris is having concurrent partners and Sam is not.  Something else must differ.  We chose the above configuration because we felt that it most matched people’s intuition for a fair comparison that allows one to isolate the effect of concurrency as much as possible.  But one might chose other comparisons as well.  Below we include three examples that we encourage readers to explore on their own, identifying what is similar and what is different between Sam and Chris, and how each of the questions in [Exercise 1](#exercise1) about probabilities and timings of transmission would be answered for that scenario.  Readers should also consider defining and exploring scenarios of their own, remembering, of course, to be mindful that all insights derived must be interpreted in light of the similarities and differences between Chris and Sam for that scenario.
 
-#### Alternate Scenario 1. Sam and Chris initiate sex at the same time, and Chris's sexual acts occur earlier than Sam's on average {-}
+#### Alternate Scenario 1. Sam and Chris initiate sex at the same time, and Chris's sexual acts occur earlier than Sam's on average
 
-```{r, echo=FALSE, out.width="500px"}
-# 400px?
-knitr::include_graphics("ConcurrencyTutorialFiles/samandchrisleft.png")
-```
+![Alternate scenario in which Sam and Chris start having sex at the same time](ConcurrencyTutorialFiles/samandchrisleft.png){width="500px"}
 
-#### Alternate Scenario 2. Sam and Chris complete sex at the same time, and Chris's sexual acts occur later than Sam's on average {-}
+#### Alternate Scenario 2. Sam and Chris complete sex at the same time, and Chris's sexual acts occur later than Sam's on average
 
-```{r, echo=FALSE, out.width="500px"}
-# 400px?
-knitr::include_graphics("ConcurrencyTutorialFiles/samandchrisright.png")
-```
+![Alternate scenario in which Sam and Chris finish having sex at the same time](ConcurrencyTutorialFiles/samandchrisright.png){width="500px"}
 
-#### Alternate Scenario 3. Sam and Chris begin and complete sex at the same time; Chris's relationships are twice as long as Sam's, but _Chris has only half as many coital acts with each partner as Sam does_.  Thus, overall Chris and Sam have the same total frequency of sex. {-}
+#### Alternate Scenario 3. Sam and Chris begin and complete sex at the same time; Chris's relationships are twice as long as Sam's, but _Chris has only half as many coital acts with each partner as Sam does_.  Thus, overall Chris and Sam have the same total frequency of sex.
 
 This scenario is an example of **coital dilution**, wherein Chris has only half as many sex acts per unit time within each relationship as Sam does.
 
-```{r, echo=FALSE, out.width="500px"}
-# 400px?
-knitr::include_graphics("ConcurrencyTutorialFiles/samandchriscoitaldilution.png")
-```
+![Alternate scenario with coital dilution, Chris having longer relationships with fewer acts each](ConcurrencyTutorialFiles/samandchriscoitaldilution.png){width="500px"}
 
 Note that across all scenarios, one of the things on which we maintain consistency is the total number of coital acts had by Sam and Chris.  Reducing one relative to the other makes it impossible  to identify the effect of concurrency itself, since a reduction in sex will in and of itself have a major impact on disease transmission.
 
@@ -253,31 +214,25 @@ Note that across all scenarios, one of the things on which we maintain consisten
 
 Now imagine a whole group of people – let’s say there are 24 of them.  And exactly 1 of them is infected with an STI – Person 7.  We will color Person 7 red, and everyone else blue.  And we will consider two scenarios, and two questions with each scenario.
 
-#### Scenario 1: In this scenario, everyone begins with 1 partner, with whom they stay sexually active for 3 months {-}
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/Pop1.png")
-```
+#### Scenario 1: In this scenario, everyone begins with 1 partner, with whom they stay sexually active for 3 months
+![Population of 24 people, each with one partner, during the first three months](ConcurrencyTutorialFiles/Pop1.png){width="500px"}
 
 After that time, they all end their existing partnerships, and start a new 3-month relationship, as follows:
 
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/Pop2.png")
-```
+![The same population re-partnered for the next three months](ConcurrencyTutorialFiles/Pop2.png){width="500px"}
 
-#### Scenario 2: In this scenario, everyone has two partnerships concurrently, in a single giant circle, which they maintain for 3 months {-}
+#### Scenario 2: In this scenario, everyone has two partnerships concurrently, in a single giant circle, which they maintain for 3 months
 
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/Pop3.png")
-```
+![Population of 24 people joined in a single concurrent circle of partnerships](ConcurrencyTutorialFiles/Pop3.png){width="500px"}
  
 
 After this, everyone spends the next 3 months with no partners at all.
 
-```{r, echo=FALSE, out.width="500px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/Pop4.png")
-```
+![The same population with no partners during the final three months](ConcurrencyTutorialFiles/Pop4.png){width="500px"}
 
-### Questions & Answers {.tabset}
+### Questions & Answers
+
+::: {.panel-tabset}
 
 #### Questions
 
@@ -305,6 +260,8 @@ Notice that this magnitude can change: no matter how large the population gets, 
 
 Remember, of course, that these scenarios are not meant to be realistic—in no population does everybody have exactly two partnerships, whether sequential or concurrent, or change partners at exactly the same time. But this exercise does make clear how powerful concurrency can be in facilitating rapid and large-scale diffusion of an STI in a population, in ways that sequential monogamy typically does not.
 
+
+:::
 
 ### Discussion
 
@@ -338,15 +295,15 @@ We shall now revisit Sequential Sam and Concurrent Chris. This time, we will ass
 
 For those readers who would like a refresher on the relevant rules of probability, visit our [Probability Tutorial](#tut2).
 
-### Questions & Answers {.tabset}
+### Questions & Answers
+
+::: {.panel-tabset}
 
 #### Questions
 
 Let us imagine that Sam has sex 200 times: first 100 times with the red partner, and then 100 times with the blue partner. This can be depicted as:
 
-```{r, echo=FALSE, out.width="800px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/samcoital.png")
-```
+![Diagram of Sam having 100 sex acts with the red partner and then 100 with the blue partner](ConcurrencyTutorialFiles/samcoital.png){width="800px"}
 
 **Question 1**: If the red partner is infected and the blue is not, what is the probability that Sam gets infected from the red partner?
 
@@ -362,9 +319,7 @@ knitr::include_graphics("ConcurrencyTutorialFiles/samcoital.png")
 
 Now let us imagine that Chris has sex 200 times: once with the red partner, then once with the blue partner, then once with red, then blue, and back and forth 100 times for a total of 200 sex acts.
 
-```{r, echo=FALSE, out.width="800px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/chriscoital.png")
-```
+![Diagram of Chris alternating sex acts between the red and blue partners](ConcurrencyTutorialFiles/chriscoital.png){width="800px"}
 
 **Question 7**: If the red partner is infected and the blue is not, what is the probability that Chris gets infected from the red partner?
 
@@ -607,13 +562,14 @@ A comparison of the answers to Questions 3 and 9.
 
 A comparison of the answers to Questions 6 and 12.
 
-####  R code for calculating transmission probabilities {#transmissioncalc}
-for Sam (sequential relationships), Chris (concurrent relationships), and the ratio of the two:
+#### R code for calculating transmission probabilities
+
+[For Sam (sequential relationships), Chris (concurrent relationships), and the ratio of the two:]{#transmissioncalc}
 
 This code involves three functions: one to calculate Sam’s risk of transmitting; one for Chris’s risk of transmitting; and one to calculate the ratio.  Each function takes two arguments: the per-act probability of transmission (called beta), and the number of sex acts had with each of the two partners (called c).  There is no function to calculate Sam’s and Chris’s probability of acquisition, because these are always the same as each other. If you are not familiar with R, and wish to use these functions, you can turn to our [R tutorial](#tut2)
 
 
-```{r, eval=FALSE, echo=TRUE, class.source='klippy'}
+```r
 sam <- function(beta,c) {
 	red.to.sam.to.blue <- (1-(1-beta)^c)^2
 	blue.to.sam.to.red <- 0
@@ -636,6 +592,8 @@ conc.ratio <- function(beta,c) {
 
 ```
    
+:::
+
 ### Discussion
 
 As in the conceptual version of this scenario, [Exercise 1](#exercise1), [Exercise 3](#exercise3) demonstrates the basic properties of concurrency at the local level. Sam had two sequential partners and Chris had two concurrent partners.  Sam and Chris had the exact same probability of getting infected.  But Chris’s uninfected partner had a probability of getting infected that was 32% larger than Sam’s uninfected partner did.  
@@ -679,9 +637,7 @@ In addition, we will model sexual relationships within this population at any gi
 
 Relationships will form and break over time.  To keep the model as simple as possible, we will assume that all existing relationships have the same probability of dissolving. As with the previous exercises, we will implement multiple scenarios for the sake of comparison, with either concurrency present or prohibited.  In fact, this exercise allows the user to turn concurrency on and off separately for women and for men, so that we can see how disease prevalence differs when both sexes, one sex, or neither sex are allowed to have concurrent partnerships. Note that it is indeed mathematically possible for the two sexes to have different levels of concurrency, and for one to have high levels and the other to have none at all.  For instance, imagine a very simple sexual network at one moment in time:
 
-```{r, echo=FALSE, out.width="400px"}
-knitr::include_graphics("ConcurrencyTutorialFiles/sexspecificconcurrency.png")
-```
+![Small sexual network in which only one sex has concurrent partners](ConcurrencyTutorialFiles/sexspecificconcurrency.png){width="400px"}
 
 In this network at this time, 50% of men (1 of 2) have concurrent partners, while 0% of women (0 of 2) do. However, the mean number of ties for men (1 per man, averaged from 2 ties for male 1 and 0 ties for male 2) equals the mean number of ties per woman (1 per woman, averaged from 1 tie for female 1 and 1 tie for female 2).
 
@@ -693,9 +649,9 @@ Some aspects of our model are realistic, and others are not.  Remember, our goal
 
 ### Code
 
-The R code for [Exercise 4](#exercise4) is printed below. Clip the clipboard on the top left to copy, and paste it into a fresh .R file in your working directory (type ```getwd()``` to confirm this location). You can then run the code line by line, or run the entire simulation at once by typing
+The R code for [Exercise 4](#exercise4) is printed below. Use the copy button at the top right of the code block to copy it, and paste it into a fresh .R file in your working directory (type `getwd()` to confirm this location). You can then run the code line by line, or run the entire simulation at once by typing
 
-```{r, echo=TRUE, eval=FALSE}
+```r
 source("concurrency_exercise_4.R")
 ```
 
@@ -711,9 +667,9 @@ The model as currently set will simulate a population in which concurrency is no
 * Play around with other parameters, like the mean degree, or the initial number of infected people, or the mean relational duration. This allows one to see how general the patterns initially observed are.
 * At some point, try stepping through the code line by line, so as to really get a sense of what is happening at each point. Feel free to query different objects as you go to see what they equal, in order to increase your intuition. Because of the time loop in the code, you may want to replace the loop with a single time step so you can run each line in the loop independently.
 
-An additional option is to use a [Web Interface](https://statnet.shinyapps.io/concurrency) that hides the code in the background, and simplifies the process of exploring multiple scenarios. One may use this in addition to, or instead of, working with the code directly.  This also allows the scenarios to begin with lower prevalence (1%) than the code does by default, and demonstrate that the equilibrium prevalence is still the same. A third option is to explore the code using the R package [concurrency.sim](https://github.com/statnet/concurrency.sim).
+An additional option is to use the [interactive web app](https://epimodel.github.io/concurrency.sim) that hides the code in the background, and simplifies the process of exploring multiple scenarios. One may use this in addition to, or instead of, working with the code directly.  This also allows the scenarios to begin with lower prevalence (1%) than the code does by default, and demonstrate that the equilibrium prevalence is still the same. A third option is to explore the code using the R package [concurrency.sim](https://github.com/EpiModel/concurrency.sim).
 
-```{r, echo=TRUE, eval=FALSE, class.source='klippy'}
+```r
 ####################################
 # Parameters
 ####################################
@@ -910,7 +866,7 @@ When one runs the code as is, and then turns concurrency on and off, one finds t
 |  Concurrency allowed for one sex but not the other  | about 18% for the sex without concurrent partners, and about 15% for the sex with concurrent partners 
 |  Concurrency not allowed for either sex  | about 1% for both sexes 
 
-And, when one follows through all of the detailed logic of the code, one can see for oneself that each model includes the same amount of partnerships and the same number of sexual acts as the others. The only difference is whether concurrency is allowed or not.  And this simple fact is the difference between 29% HIV prevalence and !% HIV prevalence. One also sees, in the cases where one sex could have concurrent partners and the other could not, that not only was there an intermediate-sized epidemic, but the sex that could **not** have concurrency ended up with the greater prevalence.  This matches the fundamental point about how concurrency works that we have been reiterating throughout this tutorial: concurrency leads to higher prevalence in the partners of those with concurrent partners.
+And, when one follows through all of the detailed logic of the code, one can see for oneself that each model includes the same amount of partnerships and the same number of sexual acts as the others. The only difference is whether concurrency is allowed or not.  And this simple fact is the difference between 29% HIV prevalence and 1% HIV prevalence. One also sees, in the cases where one sex could have concurrent partners and the other could not, that not only was there an intermediate-sized epidemic, but the sex that could **not** have concurrency ended up with the greater prevalence.  This matches the fundamental point about how concurrency works that we have been reiterating throughout this tutorial: concurrency leads to higher prevalence in the partners of those with concurrent partners.
 
 Note that these numbers combine all of the different phenomena by which concurrency operates; they result jointly from the effect of backwards transmission (partly offset by reduced forward transmission), acute infectivity, and path acceleration.
 
@@ -944,7 +900,7 @@ If this webpage has whetted your appetite, we include some places to learn more.
 
 * Watts CH and May RM, 1992. The influence of concurrent partnerships on the dynamics of HIV/AIDS. Mathematical Biosciences, 108(1): 89-104. [doi:10.1016/0025-5564(92)90006-I](http://dx.doi.org/10.1016/0025-5564(92)90006-I)
 
-* Kretzschmar, M., and M. Morris. 1996. Measures of concurrency in networks and the spread of infectious disease. Mathematical Biosciences, 133(2), 165-195.[doi:10.1016/0025-5564(95)00093-3] (http://dx.doi.org/10.1016/0025-5564(95)00093-3)
+* Kretzschmar, M., and M. Morris. 1996. Measures of concurrency in networks and the spread of infectious disease. Mathematical Biosciences, 133(2), 165-195. [doi:10.1016/0025-5564(95)00093-3](http://dx.doi.org/10.1016/0025-5564(95)00093-3)
 
 * Morris M, Kretzschmar M, 1997. Concurrent partnerships and the spread of HIV. AIDS, 11(5): 641-648. [doi:10.1097/00002030-199705000-00012](http://dx.doi.org/10.1097/00002030-199705000-00012)
 
@@ -954,7 +910,7 @@ If this webpage has whetted your appetite, we include some places to learn more.
 
 * Morris M, Kurth AE, Hamilton DT, Moody J, and Wakefield S, 2009. Concurrent partnerships and HIV prevalence disparities by race: Linking science and public health practice. American Journal of Public Health 99(6): 1023-1031. [doi:10.2105/AJPH.2008.147835](http://dx.doi.org/10.2105/AJPH.2008.147835)
 
-* Eaton JW, Hallett TB, Garnett GP. 2011. Concurrent sexual partnerships and primary HIV infection: a critical interaction. AIDS Behav. 15(4):687-92. [doi:10.1007/s10461-010-9787-8]([http://dx.doi.org/10.1007/s10461-010-9787-8)
+* Eaton JW, Hallett TB, Garnett GP. 2011. Concurrent sexual partnerships and primary HIV infection: a critical interaction. AIDS Behav. 15(4):687-92. [doi:10.1007/s10461-010-9787-8](http://dx.doi.org/10.1007/s10461-010-9787-8)
 
 
 * Goodreau SM, Cassels S, Kasprzyk D, Montaño DE, Greek A, Morris M. 2012. Concurrent Partnerships, Acute Infection and HIV Epidemic Dynamics Among Young Adults in Zimbabwe, AIDS and Behavior 16:312–322. [doi:10.1007/s10461-010-9858-x](http://dx.doi.org/10.1007/s10461-010-9858-x)
@@ -981,7 +937,7 @@ If this webpage has whetted your appetite, we include some places to learn more.
 
 * Morris M, Epstein H, Wawer M. 2010. Timing Is Everything: International Variations in Historical Sexual Partnership Concurrency and HIV Prevalence. PLOS One 5(11). [doi:10.1371/journal.pone.0014092](http://dx.doi.org/10.1371/journal.pone.0014092) (*Comparison of adults in the US, Thailand and Uganda*).
 
-* Tanser F, Barnighausen T, Hund L, Garnett GP, !McGrath N, Newell M-L. 2011. Effect of concurrent sexual partnerships on rate of new HIV infections in a high-prevalence, rural South African population: a cohort study. Lancet. 378:247–255. [doi:10.1016/S0140-6736(11)60779-4](http://dx.doi.org/10.1016/S0140-6736(11)60779-4) (*32% for men in KwaZulu-Natal, South Africa*).
+* Tanser F, Barnighausen T, Hund L, Garnett GP, McGrath N, Newell M-L. 2011. Effect of concurrent sexual partnerships on rate of new HIV infections in a high-prevalence, rural South African population: a cohort study. Lancet. 378:247–255. [doi:10.1016/S0140-6736(11)60779-4](http://dx.doi.org/10.1016/S0140-6736(11)60779-4) (*32% for men in KwaZulu-Natal, South Africa*).
 
 ## Works on measuring concurrency properly
 
@@ -992,9 +948,9 @@ If this webpage has whetted your appetite, we include some places to learn more.
 
 ## Tools for modeling network epidemiology
 
-* [http://www.statnet.org](statnet)
+* [statnet](https://statnet.org)
 
-* [Network Modeling of Infectious Disease summer short course at the University of Washington](http://statnet.org/nme/)
+* [Network Modeling for Epidemics (NME) course materials](https://epimodel.github.io/sismid/)
 
 # Tutorials 
 
@@ -1033,8 +989,10 @@ $$ P(X) * P(Y | X) = P(Y) * P(X | Y) $$
 |            So, in cases where $X$ can only be true if $Y$ is true,	
 
 $$
-P(X) * 1 	= P(Y) * P(X | Y)
-P(X) 		= P(Y) * P(X | Y)
+\begin{aligned}
+P(X) * 1 &= P(Y) * P(X | Y) \\
+P(X) &= P(Y) * P(X | Y)
+\end{aligned}
 $$
 
 8. Finally, there is one way that a few of these rules come together that is worth highlighting, because it will appear in our calculations. Let’s say we want to know the probability that Magdalena will get the flu, given ten consecutive exposures, where the probability of a flu-free person acquiring the flu is 0.03 per exposure.  One’s instinct might be simply to multiply 0.03 by ten, but this would be wrong.  One can see this by asking: what if there were 50 exposures?  The same method would lead to a probability of 0.03 x 50 = 150%, which is impossible.  The reason is that the events are not independent: if Magdalena acquires the flu on the first exposure, she cannot acquire it on the second, so that probability goes to 0.  One could calculate each of the mutually exclusive possibilities (probability Magdalena is infected on first exposure, probability on second, etc.)  and then sum them up.  But, it turns out that it is much easier to arrive at the same correct answer by first flipping the question around: what is the probability that Magdalena will not get infected in ten exposures?  Here, there is only one way for her to achieve this outcome – she needs to avoid infection at every single step.  We can break this probability down into:
@@ -1070,10 +1028,10 @@ R is a statistical programming language that combines the data analysis power of
 
 4. Often, when one receives output back from R, it begins with the notation [1].  This just means that the output contains one or more elements, and begins with element 1.
 
-**Step 5** is to dive in and explore R, with the code below.  Clip the clipboard icon at the top left to copy all the code, and paste it into a separate .R file to run it line by line. Note that any line that begins with a # (or any portion to the right of a #) does not need to be copied or typed in; if one does, it will simply be ignored. This tutorial contains every command that we will be using in our concurrency simulation exercise.
+**Step 5** is to dive in and explore R, with the code below.  Use the copy button at the top right of the code block to copy all the code, and paste it into a separate .R file to run it line by line. Note that any line that begins with a # (or any portion to the right of a #) does not need to be copied or typed in; if one does, it will simply be ignored. This tutorial contains every command that we will be using in our concurrency simulation exercise.
 
 
-```{r, echo=TRUE, eval=FALSE, class.source='klippy'}
+```r
 
 ################################################################# 
 # R tutorial
@@ -1174,7 +1132,6 @@ plot(d,k)				        # plot(d) returns a simple series plot, plot(d,k) returns a
 
 The webpage was authored by [Steven M. Goodreau](http://faculty.washington.edu/goodreau/), [Samuel M. Jenness](http://samueljenness.org/), and [Martina Morris](http://faculty.washington.edu/morrism).
 
-All material is covered by a [GPL-3.0 license](https://github.com/statnet/ConcurrencyTutorial?tab=GPL-3.0-1-ov-file).
+All material is covered by a [GPL-3.0 license](https://github.com/EpiModel/ConcurrencyTutorial?tab=GPL-3.0-1-ov-file).
 
-Code can be found in the associated [GitHub repository](https://github.com/statnet/ConcurrencyTutorial).
-
+Code can be found in the associated [GitHub repository](https://github.com/EpiModel/ConcurrencyTutorial).

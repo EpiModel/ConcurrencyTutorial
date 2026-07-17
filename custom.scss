@@ -1,0 +1,33 @@
+/*-- scss:defaults --*/
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+// Typography
+$font-family-sans-serif: 'Atkinson Hyperlegible', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+$headings-font-family: 'Open Sans', 'Atkinson Hyperlegible', sans-serif;
+$headings-font-weight: 600;
+$font-size-base: 1.05rem;
+
+// Colors
+$primary: #1a6b54;
+$link-color: #1a6b54;
+
+/*-- scss:rules --*/
+
+// Keep tutorial figures from overflowing their column
+.quarto-title-block .description {
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Tabset tabs in the EpiModel teal
+.panel-tabset .nav-link.active {
+  color: $primary;
+  border-bottom-color: $primary;
+}
