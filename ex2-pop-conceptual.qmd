@@ -6,14 +6,19 @@ title: "Exercise 2: The population level, conceptually"
 
 Now imagine a whole group of people – let’s say there are 24 of them.  And exactly 1 of them is infected with an STI – Person 7.  We will color Person 7 red, and everyone else blue.  And we will consider two scenarios, and two questions with each scenario.
 
-### Scenario 1: In this scenario, everyone begins with 1 partner, with whom they stay sexually active for 3 months
+### Scenario 1
+
+In this scenario, everyone begins with 1 partner, with whom they stay sexually active for 3 months.
+
 ![Population of 24 people, each with one partner, during the first three months](ConcurrencyTutorialFiles/Pop1.png){width="500px"}
 
 After that time, they all end their existing partnerships, and start a new 3-month relationship, as follows:
 
 ![The same population re-partnered for the next three months](ConcurrencyTutorialFiles/Pop2.png){width="500px"}
 
-### Scenario 2: In this scenario, everyone has two partnerships concurrently, in a single giant circle, which they maintain for 3 months
+### Scenario 2
+
+In this scenario, everyone has two partnerships concurrently, in a single giant circle, which they maintain for 3 months.
 
 ![Population of 24 people joined in a single concurrent circle of partnerships](ConcurrencyTutorialFiles/Pop3.png){width="500px"}
  
