@@ -2,24 +2,50 @@ project:
   type: website
   output-dir: _site
   render:
-    - index.qmd
+    - "*.qmd"
 
 website:
   title: "Concurrency Tutorial"
   description: "How relational concurrency does (and does not) shape HIV and STI epidemics"
+  page-navigation: true
   navbar:
     background: dark
     pinned: true
     right:
       - text: "EpiModel"
         href: https://www.epimodel.org
-      - text: "Training"
-        href: https://epimodel.github.io/sismid/
       - text: "Interactive app"
         href: https://epimodel.github.io/concurrency.sim
       - icon: github
         href: https://github.com/EpiModel/ConcurrencyTutorial
         aria-label: GitHub
+  sidebar:
+    style: docked
+    search: true
+    collapse-level: 1
+    contents:
+      - text: "Overview"
+        href: index.qmd
+      - section: "Exercises"
+        contents:
+          - text: "1. Local, conceptual"
+            href: ex1-local-conceptual.qmd
+          - text: "2. Population, conceptual"
+            href: ex2-pop-conceptual.qmd
+          - text: "3. Local, numerical"
+            href: ex3-local-numerical.qmd
+          - text: "4. Population, numerical"
+            href: ex4-pop-numerical.qmd
+      - text: "Summary"
+        href: summary.qmd
+      - section: "Background"
+        contents:
+          - text: "Rules of probability"
+            href: prob-tutorial.qmd
+          - text: "Introduction to R"
+            href: r-tutorial.qmd
+          - text: "More resources"
+            href: resources.qmd
   page-footer:
     border: false
     background: dark
@@ -42,6 +68,7 @@ format:
     theme:
       - cosmo
       - custom.scss
+    css: styles.css
     toc: true
     toc-depth: 3
     code-copy: true

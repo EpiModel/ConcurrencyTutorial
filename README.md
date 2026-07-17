@@ -19,9 +19,9 @@ Two short appendices provide the background some readers will want: a refresher 
 
 ## Repository layout
 
-- `index.qmd` is the entire tutorial, authored as a single Quarto document.
+- `index.qmd` is the overview and landing page. Each exercise (`ex1-*` through `ex4-*`), the summary, and the background tutorials (probability, R, resources) are their own `*.qmd` page, tied together by the sidebar and page navigation defined in `_quarto.yml`.
 - `ConcurrencyTutorialFiles/` holds the figures used throughout.
-- `_quarto.yml` and `custom.scss` carry the EpiModel styling (the cosmo theme with the teal EpiModel palette and the Open Sans and Atkinson Hyperlegible fonts) along with the site navigation and footer.
+- `_quarto.yml`, `custom.scss`, and `styles.css` carry the EpiModel styling (the cosmo theme with teal accents, a steel-blue navbar and footer, and the Open Sans and Atkinson Hyperlegible fonts) along with the site navigation.
 - `.github/workflows/publish.yml` renders the site and publishes it to the `gh-pages` branch on every push to `main`.
 
 ## Building locally

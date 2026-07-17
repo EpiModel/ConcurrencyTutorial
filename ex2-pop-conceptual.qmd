@@ -1,0 +1,83 @@
+---
+title: "Exercise 2: The population level, conceptually"
+---
+
+## Introduction
+
+Now imagine a whole group of people – let’s say there are 24 of them.  And exactly 1 of them is infected with an STI – Person 7.  We will color Person 7 red, and everyone else blue.  And we will consider two scenarios, and two questions with each scenario.
+
+### Scenario 1: In this scenario, everyone begins with 1 partner, with whom they stay sexually active for 3 months
+![Population of 24 people, each with one partner, during the first three months](ConcurrencyTutorialFiles/Pop1.png){width="500px"}
+
+After that time, they all end their existing partnerships, and start a new 3-month relationship, as follows:
+
+![The same population re-partnered for the next three months](ConcurrencyTutorialFiles/Pop2.png){width="500px"}
+
+### Scenario 2: In this scenario, everyone has two partnerships concurrently, in a single giant circle, which they maintain for 3 months
+
+![Population of 24 people joined in a single concurrent circle of partnerships](ConcurrencyTutorialFiles/Pop3.png){width="500px"}
+ 
+
+After this, everyone spends the next 3 months with no partners at all.
+
+![The same population with no partners during the final three months](ConcurrencyTutorialFiles/Pop4.png){width="500px"}
+
+## Questions & Answers
+
+::: {.panel-tabset}
+
+### Questions
+
+**Question 1**. Over time, how many partners did each person have in Scenario 1?
+
+**Question 2**. Over time, how many partners did each person have in Scenario 2?
+
+**Question 3**. Over time, how many people (including Person 7) could possibly get infected in Scenario 1?
+
+**Question 4**. Over time, how many people (including Person 7) could possibly get infected in Scenario 2?
+
+### Answers
+
+**Question 1**. Over time, how many partners did each person have in Scenario 1? Answer: **2**. Every single person in the population has two partners, and they all have them sequentially. 
+
+**Question 2**. Over time, how many partners did each person have in Scenario 2?  Answer: **2**. Every single person in the population has two partners, and they all have them concurrently.
+
+**Question 3**. Over time, how many people (including Person 7) could possibly get infected in Scenario 1?   Answer: **4**. Person 7 could infect person 8 during the first three months. Then, during the next three months, 7 could infect 6, and 8 could infect 9.  But that is as far as the infection can go.
+
+**Question 4** Over time, how many people (including Person 7) could possibly get infected in Scenario 2? Answer: **24**.  The infection could travel the whole way around the circle, without stopping.
+
+That means that 6 times more people are at risk in the second scenario than in the first one.  And in both scenarios, everyone had exactly two partners.  The only difference is that in the first scenario the partnerships are sequential, and in the second one they are concurrent.
+
+Notice that this magnitude can change: no matter how large the population gets, in the first scenario there are always four people at risk, and in the second scenario, the entire population is at risk, whether that’s 24 people, or 100, or 1000. The only thing limiting the spread of disease to the whole population in the concurrency case is the fact that most diseases have relatively low probability of transmissions per contact.  So in practice, an infection is unlikely to go all the way around a circle of 100 or 1000 people in the time span of six months. But it will almost certainly infect more people (and possibly many more) than in the sequential monogamy case.
+
+Remember, of course, that these scenarios are not meant to be realistic—in no population does everybody have exactly two partnerships, whether sequential or concurrent, or change partners at exactly the same time. But this exercise does make clear how powerful concurrency can be in facilitating rapid and large-scale diffusion of an STI in a population, in ways that sequential monogamy typically does not.
+
+
+:::
+
+## Discussion
+
+Through two conceptual exercises, we learned that:
+
+**Concurrency does not increase risk to the individual practicing concurrency, relative to the same partners sequentially**
+
+This means that, even if a real concurrency effect exists, it cannot be detected by analyses that use an individual’s concurrency practices as a predictor of their own infection status (controlling for their cumulative number of partners over time).  If this kind of analysis does show an effect, there are different possible explanations – for instance:
+
+* that people with concurrent partners are more likely to have partners who also have concurrent partners
+* that people with concurrent partners are more likely to choose partners who are infected
+* that people with concurrent partners tend to have riskier sex in some way not accounted for
+
+Any of these may be true.  However, none of them must be true in order for concurrency to amplify STI spread in a population.
+
+**Concurrency acts in three different ways at the local level to amplify disease transmission**
+
+These include increasing numbers of transmission paths, speeding up existing transmission paths, and increasing exposure during periods of relatively high infectiousness.
+	
+**These local effects can accumulate up to produce very large differences in epidemic potential at the population level**
+
+We saw this with [Exercise 2](ex2-pop-conceptual.qmd), where the population with concurrency had 6 times more possible infections than the population without.
+For those who wish to see more rigorous examples of these same patterns, we now proceed to the Numerical Exercises.
+
+::: {.callout-tip title="Key takeaway"}
+Every person had exactly two partners in both scenarios. Sequential partnering left only four people at risk; concurrent partnering put the entire population at risk, six times as many. Concurrency changes the scale of an epidemic without changing anyone's number of partners.
+:::
