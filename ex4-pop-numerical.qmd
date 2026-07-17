@@ -4,7 +4,7 @@ title: "Exercise 4: The population level, numerically"
 
 ## Introduction
 
-This is the most complex of the four exercises, but also potentially the most powerful.  Here we will do a full simulation of a dynamic network to see how the presence or absence of relational concurrency affects the prevalence of an STI.  On this page, we will describe the basic goals and structure of the model.  On the next page, we offer an R tutorial for those users who are not already familiar with the language.  Those who are familiar may choose to skip the tutorial and proceed directly to the next page, which contains the model code and instructions. We also link to an interface that allows one to explore the model without dealing directly with any code, for use alone or in conjunction with code-based explorations; users who only wish to use this interface may skip the R tutorial as well.
+This is the most complex of the four exercises, but also potentially the most powerful.  Here we will do a full simulation of a dynamic network to see how the presence or absence of relational concurrency affects the prevalence of an STI.  This page describes the basic goals and structure of the model and then gives the model code and instructions.  For those who are not already familiar with the R language, we offer an [introduction to R](r-tutorial.qmd) in the Appendix; those who are familiar may skip it and go straight to the code below. We also link to an [interactive app](https://epimodel.github.io/concurrency.sim) that allows one to explore the model without dealing directly with any code, for use alone or in conjunction with code-based explorations; users who only wish to use the app may skip the R introduction as well.
 
 Our model will track a population of 10,000 people: 5,000 women and 5,000 men.  We will create two separate data tables: one for women, and one for men. The women will be noted by an ID number (females 1-5000, corresponding to rows 1-5000 in the female data table), as will the men (males 1-5000, corresponding to rows 1-5000 in the male data table).  We will keep track of two pieces of information about each individual over time: their HIV status, and, for those who are infected, the amount of time since they were infected. 
 
@@ -24,7 +24,7 @@ Some aspects of our model are realistic, and others are not.  Remember, our goal
 
 ## Code
 
-The R code for [Exercise 4](ex4-pop-numerical.qmd) is printed below. Use the copy button at the top right of the code block to copy it, and paste it into a fresh .R file in your working directory (type `getwd()` to confirm this location). You can then run the code line by line, or run the entire simulation at once by typing
+The R code for this exercise is printed below. Use the copy button at the top right of the code block to copy it, and paste it into a fresh .R file in your working directory (type `getwd()` to confirm this location). You can then run the code line by line, or run the entire simulation at once by typing
 
 ```r
 source("concurrency_exercise_4.R")
@@ -50,9 +50,9 @@ An additional option is to use the [interactive web app](https://epimodel.github
 ####################################
 
 # Should we enforce a rule of female monogamy?
-force.feml.monog <- F
+force.feml.monog <- T
 # Should we enforce a rule of male monogamy?
-force.male.monog <- F
+force.male.monog <- T
 
 # Number of females
 n.femls <- 5000

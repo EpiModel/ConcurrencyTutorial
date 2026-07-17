@@ -6,7 +6,7 @@ title: "Exercise 3: The local level, numerically"
 
 We shall now revisit Sequential Sam and Concurrent Chris. This time, we will assume that the probability of transmission from a single act of sex between an infected and an uninfected person is 1%. There is no acute infection, nor any cure.  Thus, in this exercise, we are not considering the impact of concurrency via the “acute infectivity” effect, only through other mechanisms.
 
-For those readers who would like a refresher on the relevant rules of probability, visit our [Probability Tutorial](r-tutorial.qmd).
+For those readers who would like a refresher on the relevant rules of probability, visit our [Probability Tutorial](prob-tutorial.qmd).
 
 ## Questions & Answers
 
@@ -40,9 +40,9 @@ Now let us imagine that Chris has sex 200 times: once with the red partner, then
 
 **Question 9**: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Chris’s probability of becoming infected?
 
-**Question 10**: If the red partner is infected and the blue is not, what is the probability that Chris gets infected AND transmits to the blue partner? (This one is hard—if you need a hint, click the Hint tab.)
+**Question 10**: If the red partner is infected and the blue is not, what is the probability that Chris gets infected AND transmits to the blue partner? (This one is hard—if you need a hint, click the Hints tab.)
 
-**Question 11**: If the blue partner is infected and the red is not, what is the probability that Chris gets infected AND transmits to the red partner? (This one is hard—if you need a hint, click the Hint tab.)
+**Question 11**: If the blue partner is infected and the red is not, what is the probability that Chris gets infected AND transmits to the red partner? (This one is hard—if you need a hint, click the Hints tab.)
 
 **Question 12**: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is the probability that Chris both becomes infected and transmits to an uninfected partner?
 
@@ -60,7 +60,7 @@ Need help on either of these two questions?
 
 **Question 11**: If the blue partner is infected and the red is not, what is the probability that Chris gets infected AND transmits to the red partner?
 
-Our first piece of guidance is to work through the _Probability Tutorial_ (see link on left), if you have not already.  The example at the bottom of that page provides some hints as to how to proceed with the above.
+Our first piece of guidance is to work through the [Probability Tutorial](prob-tutorial.qmd), if you have not already.  The example at the bottom of that page provides some hints as to how to proceed with the above.
 
 Then, with that tutorial in mind, consider the following steps in order.
   
@@ -96,7 +96,7 @@ _P(Chris is infected on the second sex act with red) * P(Chris infects blue | Ch
 
 * Since Chris must avoid infection on the first sex act with red in order to become infected on the second sex act with red, this can be further broken down into:
 
-_P(Chris is infected on the second sex act with red | Chris avoided infection on the first sex act with red) * P(Chris avoids infection on the first sex act with red) P(infects blue | Chris is infected on the second sex act with red)_
+_P(Chris is infected on the second sex act with red | Chris avoided infection on the first sex act with red) * P(Chris avoids infection on the first sex act with red) * P(infects blue | Chris is infected on the second sex act with red)_
 
 * Calculate the probability for the 37th of these (Chris is infected on the 37th sex act with red, and then subsequently passes to blue).
 
@@ -110,7 +110,7 @@ The structure of the solution for Question 11 is exactly the same, although the 
 
 ### Answers
 
-On this page, we provide the numerical answers only. For those readers who wish to see derivations of them, see the Derivations tab.  Or for those readers who had some incorrect answers and want to try again, check out the [Probability Tutorial](r-tutorial.qmd).
+On this page, we provide the numerical answers only. For those readers who wish to see derivations of them, see the Derivations tab.  Or for those readers who had some incorrect answers and want to try again, check out the [Probability Tutorial](prob-tutorial.qmd).
 
 **The probability of transmission from a single act of sex between an infected and an uninfected person is 1%.**
 
@@ -203,7 +203,7 @@ We already know that the first of these is 0.634.  For the second, the calculati
 
 **Question 5**: If the blue partner is infected and the red is not, what is the probability that Sam will get infected AND pass the infection on to the red partner? **0%**
 
-Sam’s sex acts with red all preceded the first sex act with red, so there are no acts during which Sam can transmit an infection acquired for red to blue.
+Sam’s sex acts with red all preceded the first sex act with blue, so there are no acts during which Sam can transmit an infection acquired from blue on to red.
 
 **Question 6**: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Sam’s overall joint probability of becoming infected and transmitting? **20.1%**
 
@@ -229,9 +229,9 @@ Same logic as Question 3.
 
 There are 100 mutually exclusive ways that Chris can get infected by red and pass it on to blue: (1) Chris is infected on the first sex act with red, and then subsequently passes to blue; (2) Chris is infected on the second sex act with red, and then subsequently passes to blue; (3) Chris is infected on the third sex act with red, and then subsequently passes to blue; etc.  Since these are mutually exclusive, we can calculate the probability of each, and then add them all together.  
 
-The probability of (1) is: P(Chris is infected on the first sex act with red) * P(infects blue | Chris is infected on the first sex act with red) = (0.01) * [1-(0.99)^100^] = 0.0634. This is because, if Chris is infected during the first sex act with red, there are still 100 acts with blue during which transmission to blue may occur.
+The probability of (1) is: P(Chris is infected on the first sex act with red) * P(infects blue | Chris is infected on the first sex act with red) = (0.01) * [1-(0.99)^100^] = 0.00634. This is because, if Chris is infected during the first sex act with red, there are still 100 acts with blue during which transmission to blue may occur.
 
-The probability of (2) is: P(Chris is infected on the second sex act with red) * P(infects blue | Chris is infected on the second sex act with red).  In order to become infected on the second sex act with red, Chris must avoid infection on the first act, and then become infected on the second.  Then, once that happens, there are only 99 acts with blue remaining in which to transmit.  So we have (0.99) * (0.01) * [1-(0.99)^99^] = 0.0624.
+The probability of (2) is: P(Chris is infected on the second sex act with red) * P(infects blue | Chris is infected on the second sex act with red).  In order to become infected on the second sex act with red, Chris must avoid infection on the first act, and then become infected on the second.  Then, once that happens, there are only 99 acts with blue remaining in which to transmit.  So we have (0.99) * (0.01) * [1-(0.99)^99^] = 0.00624.
 
 If one repeats this, the general expression that emerges for the probability of Chris being infected on the n^th^ sex act with red and subsequently transmitting to blue is:
 
@@ -247,9 +247,9 @@ Once all 100 numbers are calculated and summed, the result is: 0.268.
 
 Here the logic is almost the same as in Question 10; there are 100 time points at which Chris may be infected by blue; however, because the sex acts with blue start later, there is one fewer acts for transmission onward to red in each of the hundred cases.  That is:
 
-The probability of (1) is: P(Chris is infected on the first sex act with blue) * P(infects red| Chris is infected on the first sex act with blue) = (0.01) * 1-(0.99)^99^ = 0.0630
+The probability of (1) is: P(Chris is infected on the first sex act with blue) * P(infects red| Chris is infected on the first sex act with blue) = (0.01) * 1-(0.99)^99^ = 0.00630
 
-The probability of (2) is: P(Chris is infected on the second sex act with blue) * P(infects red | Chris is infected on the second sex act with blue).= (0.99) * (0.01) * 1-(0.99)^98^ = 0.0620.
+The probability of (2) is: P(Chris is infected on the second sex act with blue) * P(infects red | Chris is infected on the second sex act with blue).= (0.99) * (0.01) * 1-(0.99)^98^ = 0.00620.
 
 The general expression for the probability of Chris being infected on the n^th^ sex act with blue and subsequently transmitting to red is:
 
@@ -309,7 +309,7 @@ conc.ratio <- function(beta,c) {
 
 ## Discussion
 
-As in the conceptual version of this scenario, [Exercise 1](ex1-local-conceptual.qmd), [Exercise 3](ex3-local-numerical.qmd) demonstrates the basic properties of concurrency at the local level. Sam had two sequential partners and Chris had two concurrent partners.  Sam and Chris had the exact same probability of getting infected.  But Chris’s uninfected partner had a probability of getting infected that was 32% larger than Sam’s uninfected partner did.  
+As in the conceptual version of this scenario, [Exercise 1](ex1-local-conceptual.qmd), Exercise 3 demonstrates the basic properties of concurrency at the local level. Sam had two sequential partners and Chris had two concurrent partners.  Sam and Chris had the exact same probability of getting infected.  But Chris’s uninfected partner had a probability of getting infected that was 32% larger than Sam’s uninfected partner did.  
 Let us think about how our numbers relate to the various components of concurrency’s effect that we explored in the Discussion of [Exercise 1](ex1-local-conceptual.qmd).  We first focus on two of these:
 
 * **“backwards transmission”** : Indeed, Chris has created a potential transmission path that is missing from Sam’s case: becoming infected by blue and then transmitting to red.  The probability of this happening was 26.4% for Chris; for Sam, it was 0%, of course.
@@ -322,7 +322,7 @@ The third feature affecting transmission probabilities is the **“acute infecti
 
 Finally, since we were only focused on transmission probabilities, we did not explore the issue of the expected time until transmission (given that transmission happens).  This is the **“path acceleration”** effect that we also mentioned in [Exercise 1](ex1-local-conceptual.qmd). Path acceleration is indeed present here; that is, the expected time between becoming infected and then transmitting is shorter for Chris than for Sam.  The mathematics behind this are quite complicated, however, and we do not show them.  We encourage interested readers to try deriving this result for themselves as an exercise. In [Exercise 4](ex4-pop-numerical.qmd), we will explore the collective population-level effects of concurrency, which brings together all of the various phenomena, including path acceleration.
 
-One important phenomenon that relates to concurrency is coital dilution—the possibility that people in multiple relationships have fewer coital acts with one or more of their partners per unit time than they would if they were only in one relationship. Notice that in [Exercise 3](ex3-local-numerical.qmd), we did not specify the time frame for either set of relationships. We would get the same result regardless of whether we consider Chris's relationships to be the same length as Sam's and have no coital dilution; or to be twice as long as Sam's and have major coital dilution; or somewhere in between. In the first case, Chris would spend half the time having twice as many coital acts as Sam, and have none at all the other half. In the second case, Chris would be having as many coital acts as Sam all the time, but would be having half as many per time period within each relationship.
+One important phenomenon that relates to concurrency is coital dilution—the possibility that people in multiple relationships have fewer coital acts with one or more of their partners per unit time than they would if they were only in one relationship. Notice that in Exercise 3, we did not specify the time frame for either set of relationships. We would get the same result regardless of whether we consider Chris's relationships to be the same length as Sam's and have no coital dilution; or to be twice as long as Sam's and have major coital dilution; or somewhere in between. In the first case, Chris would spend half the time having twice as many coital acts as Sam, and have none at all the other half. In the second case, Chris would be having as many coital acts as Sam all the time, but would be having half as many per time period within each relationship.
 
 Some readers may be wondering: how are our findings in this exercise affected by different parameters?  What if the per-contact risk of transmission is higher or lower?  What if the number of sex acts in each relationship is higher or lower?  We can re-calculate the numbers by hand for any pair of values, if we wish.  Or, those readers who are familiar with R can use the [code from above](#transmissioncalc), combined with an additional piece of code below that calculates the transmission ratio for Chris to Sam, for many different values of beta and c, and then plots them.
 

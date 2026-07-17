@@ -8,7 +8,7 @@ R is a statistical programming language that combines the data analysis power of
 
 **Step 2** is to open R.  The details for doing so depend on your system, but are standard for that system.  For example, in Windows, you can click on the desktop icon (if you allowed it to be created during installation), or find R in the Programs list.  Regardless of your system, you will see the same R logo: a big blue “R”.
 
-**Step 3** is to learn the basics of how R file management works. All of the objects that you produce during a session—things like data tables or other kinds of output—are known as objects.  And all of those objects are, by default, stored together in one data file, with the extension .RData.  (Note the capital “D”).  One can store them differently, if one chooses, but we will go with the default here.  Commands can be entered into the command line directly, or they can be loaded in from a text file (which typically has the extension .R).
+**Step 3** is to learn the basics of how R file management works. All of the things that you produce during a session—data tables or other kinds of output—are known as objects.  And all of those objects are, by default, stored together in one data file, with the extension .RData.  (Note the capital “D”).  One can store them differently, if one chooses, but we will go with the default here.  Commands can be entered into the command line directly, or they can be loaded in from a text file (which typically has the extension .R).
 
 **Step 4** is to learn a few more things: 
 
@@ -32,7 +32,7 @@ R is a statistical programming language that combines the data analysis power of
 
 ###### BASICS ########################################################
 # Comments begin with a #
-3*2					     # R include basic arithmetical operations, of course
+3*2					     # R includes basic arithmetical operations, of course
 a <- 3					 # To assign a value to a variable, use <- (Pronounced "gets")
 a					       # To evaluate an object, type its name
 a*2
@@ -43,7 +43,7 @@ a^2 == 8				 # To test the value of an object, use ==
 
 round(4.2)			 # R also contains many named arithmetical functions.
 
-ls()					   # To see the list of objecs that have been created
+ls()					   # To see the list of objects that have been created
 
 ###### VECTORS #######################################################
 # R relies heavily on vectors of numbers
@@ -55,7 +55,7 @@ c(rep(9,5),6)		 # These can be combined, of course.
 1:10					   # Colon notation gives a vector of sequential integers
 d[2]					   # Square brackets pull out elements from a vector – this gets the second element in d
 d[2:3]
-d[-2]					   # Negative in a bracket means "eveything but"
+d[-2]					   # Negative in a bracket means "everything but"
 f <- vector()		 # To make a vector but leave it empty for the moment, use vector()
 f					       # logical(0) just means that this is a vector of length 0
 length(d)				 # To see the length of a vector, use the length function	
@@ -88,7 +88,7 @@ d
 
 a == 3 & d[2] == 3			 # Boolean logic.  & for and, | for or, ! for not.
 
-y <- 2					         # Loops.  This means the code iside the curly brackets will be run 10 times.  The first time through, z will equal 1.
+y <- 2					         # Loops.  This means the code inside the curly brackets will be run 10 times.  The first time through, z will equal 1.
 for (z in 1:10) {			   # The second time through, z will equal 2, etc.
     y <- y+z^2
     }			
@@ -102,7 +102,7 @@ i %in% 1				        # To override this behavior for ==, use %in% instead.
 j <- c(3,3,7,7,9)
 table(j)				        # Creates a table of values with frequencies
 
-rbinom(100,1,0.3)			  # Draws random values from a binomial distribution.  Syntax: rbinom(number_of_samples, numer_of_independent_draws_per_sample, probability_of_success_per_draw)
+rbinom(100,1,0.3)			  # Draws random values from a binomial distribution.  Syntax: rbinom(number_of_samples, number_of_independent_draws_per_sample, probability_of_success_per_draw)
 					              # Try running it multiple times to see the randomness
 k <- c(4,2,5,3)
 setdiff(j,k)				    # Takes two vectors; returns the elements that are in the first but not in the second.
@@ -116,6 +116,6 @@ rbind(h,m) 				      # Appends one data.frame below another; make sure they have
 
 plot(d)					        # Plots data, in a variety of different ways depending on the structure of the data and the arguments passed. 
 plot(d,k)				        # plot(d) returns a simple series plot, plot(d,k) returns a scatter plot.
-# that’s all!)
+# that’s all!
 
 ```

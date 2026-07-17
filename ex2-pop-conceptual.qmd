@@ -49,7 +49,7 @@ After this, everyone spends the next 3 months with no partners at all.
 
 **Question 3**. Over time, how many people (including Person 7) could possibly get infected in Scenario 1?   Answer: **4**. Person 7 could infect person 8 during the first three months. Then, during the next three months, 7 could infect 6, and 8 could infect 9.  But that is as far as the infection can go.
 
-**Question 4** Over time, how many people (including Person 7) could possibly get infected in Scenario 2? Answer: **24**.  The infection could travel the whole way around the circle, without stopping.
+**Question 4**. Over time, how many people (including Person 7) could possibly get infected in Scenario 2? Answer: **24**.  The infection could travel the whole way around the circle, without stopping.
 
 That means that 6 times more people are at risk in the second scenario than in the first one.  And in both scenarios, everyone had exactly two partners.  The only difference is that in the first scenario the partnerships are sequential, and in the second one they are concurrent.
 
@@ -80,7 +80,7 @@ These include increasing numbers of transmission paths, speeding up existing tra
 	
 **These local effects can accumulate up to produce very large differences in epidemic potential at the population level**
 
-We saw this with [Exercise 2](ex2-pop-conceptual.qmd), where the population with concurrency had 6 times more possible infections than the population without.
+We saw this above, where the population with concurrency had 6 times more possible infections than the population without.
 For those who wish to see more rigorous examples of these same patterns, we now proceed to the Numerical Exercises.
 
 ::: {.callout-tip title="Key takeaway"}

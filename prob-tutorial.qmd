@@ -50,6 +50,6 @@ $$
 |              Etc.
 |              
 
-* Although this may look complicated, it is actually leads us somewhere quite simple, because each line is equal to 0.97 -- that is, 1 – 0.03. So the entire probability can be expressed as (0.97)^10^ = 0.737.
+* Although this may look complicated, it actually leads us somewhere quite simple, because each line is equal to 0.97 -- that is, 1 – 0.03. So the entire probability can be expressed as (0.97)^10^ = 0.737.
 
 * That is Magdalena’s probability of avoiding infection.  And since there are only two possibilities (getting infected, avoiding infection), the probability of her getting infected must equal 1-(0.97)^10^ = 0.263.  One can see that the correct answer is less than if we had simply multiplied 0.03 by ten. This will always be the case.
