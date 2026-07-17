@@ -281,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>R is a statistical programming language that combines the data analysis power of a statistics package like Stata, SAS, or SPSS with the flexibility of a computer language like C++. It is free and open-source. Perhaps its greatest feature is that it provides a standardized system for users to share code with one another (through “contributed packages” posted on the R website), so that new users often find that many of their programming tasks have already been completed by others. This allows users to avoid the enormous duplication of effort that has plagued programming (and epidemic modeling) in the past, and instead focus on performing novel work.</p>
 <p><strong>Step 1</strong> in using R is to download and install R. Simply go to http://www.r-project.org, click on “CRAN” on the left, select a site near you, select “Download R” for your platform, and follow the instructions.</p>
 <p><strong>Step 2</strong> is to open R. The details for doing so depend on your system, but are standard for that system. For example, in Windows, you can click on the desktop icon (if you allowed it to be created during installation), or find R in the Programs list. Regardless of your system, you will see the same R logo: a big blue “R”.</p>
-<p><strong>Step 3</strong> is to learn the basics of how R file management works. All of the objects that you produce during a session—things like data tables or other kinds of output—are known as objects. And all of those objects are, by default, stored together in one data file, with the extension .RData. (Note the capital “D”). One can store them differently, if one chooses, but we will go with the default here. Commands can be entered into the command line directly, or they can be loaded in from a text file (which typically has the extension .R).</p>
+<p><strong>Step 3</strong> is to learn the basics of how R file management works. All of the things that you produce during a session—data tables or other kinds of output—are known as objects. And all of those objects are, by default, stored together in one data file, with the extension .RData. (Note the capital “D”). One can store them differently, if one chooses, but we will go with the default here. Commands can be entered into the command line directly, or they can be loaded in from a text file (which typically has the extension .R).</p>
 <p><strong>Step 4</strong> is to learn a few more things:</p>
 <ol type="1">
 <li><p>The command line is indicated by a “&gt;”.</p></li>
@@ -298,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">###### BASICS ########################################################</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Comments begin with a #</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="sc">*</span><span class="dv">2</span>                      <span class="co"># R include basic arithmetical operations, of course</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="sc">*</span><span class="dv">2</span>                      <span class="co"># R includes basic arithmetical operations, of course</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">3</span>                   <span class="co"># To assign a value to a variable, use &lt;- (Pronounced "gets")</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>a                          <span class="co"># To evaluate an object, type its name</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>a<span class="sc">*</span><span class="dv">2</span></span>
@@ -309,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fl">4.2</span>)           <span class="co"># R also contains many named arithmetical functions.</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()                       <span class="co"># To see the list of objecs that have been created</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()                       <span class="co"># To see the list of objects that have been created</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="do">###### VECTORS #######################################################</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># R relies heavily on vectors of numbers</span></span>
@@ -321,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>                       <span class="co"># Colon notation gives a vector of sequential integers</span></span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>d[<span class="dv">2</span>]                       <span class="co"># Square brackets pull out elements from a vector – this gets the second element in d</span></span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>d[<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>d[<span class="sc">-</span><span class="dv">2</span>]                      <span class="co"># Negative in a bracket means "eveything but"</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>d[<span class="sc">-</span><span class="dv">2</span>]                      <span class="co"># Negative in a bracket means "everything but"</span></span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">vector</span>()        <span class="co"># To make a vector but leave it empty for the moment, use vector()</span></span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>f                          <span class="co"># logical(0) just means that this is a vector of length 0</span></span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(d)                <span class="co"># To see the length of a vector, use the length function   </span></span>
@@ -354,7 +354,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>a <span class="sc">==</span> <span class="dv">3</span> <span class="sc">&amp;</span> d[<span class="dv">2</span>] <span class="sc">==</span> <span class="dv">3</span>           <span class="co"># Boolean logic.  &amp; for and, | for or, ! for not.</span></span>
 <span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span>                           <span class="co"># Loops.  This means the code iside the curly brackets will be run 10 times.  The first time through, z will equal 1.</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span>                           <span class="co"># Loops.  This means the code inside the curly brackets will be run 10 times.  The first time through, z will equal 1.</span></span>
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (z <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {              <span class="co"># The second time through, z will equal 2, etc.</span></span>
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> y<span class="sc">+</span>z<span class="sc">^</span><span class="dv">2</span></span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    }           </span>
@@ -368,7 +368,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">9</span>)</span>
 <span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(j)                        <span class="co"># Creates a table of values with frequencies</span></span>
 <span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="fu">rbinom</span>(<span class="dv">100</span>,<span class="dv">1</span>,<span class="fl">0.3</span>)             <span class="co"># Draws random values from a binomial distribution.  Syntax: rbinom(number_of_samples, numer_of_independent_draws_per_sample, probability_of_success_per_draw)</span></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="fu">rbinom</span>(<span class="dv">100</span>,<span class="dv">1</span>,<span class="fl">0.3</span>)             <span class="co"># Draws random values from a binomial distribution.  Syntax: rbinom(number_of_samples, number_of_independent_draws_per_sample, probability_of_success_per_draw)</span></span>
 <span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>                                  <span class="co"># Try running it multiple times to see the randomness</span></span>
 <span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">3</span>)</span>
 <span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(j,k)                    <span class="co"># Takes two vectors; returns the elements that are in the first but not in the second.</span></span>
@@ -382,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d)                         <span class="co"># Plots data, in a variety of different ways depending on the structure of the data and the arguments passed. </span></span>
 <span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d,k)                       <span class="co"># plot(d) returns a simple series plot, plot(d,k) returns a scatter plot.</span></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co"># that’s all!)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co"># that’s all!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 
