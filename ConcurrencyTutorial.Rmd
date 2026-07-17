@@ -1169,3 +1169,12 @@ plot(d,k)				        # plot(d) returns a simple series plot, plot(d,k) returns a
 # that’s all!)
 
 ```
+
+# Authors and permissions
+
+The webpage was authored by [Steven M. Goodreau](http://faculty.washington.edu/goodreau/), [Samuel M. Jenness](http://samueljenness.org/), and [Martina Morris](http://faculty.washington.edu/morrism).
+
+All material is covered by a [GPL-3.0 license](https://github.com/statnet/ConcurrencyTutorial?tab=GPL-3.0-1-ov-file).
+
+Code can be found in the associated [GitHub repository](https://github.com/statnet/ConcurrencyTutorial).
+
