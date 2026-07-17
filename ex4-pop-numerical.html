@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">Background</span></a>
+ <span class="menu-text">Appendix</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -322,186 +322,235 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>force.feml.monog <span class="ot">&lt;-</span> F                                                         <span class="co"># Should we enforce a rule of female monogamy?</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>force.male.monog <span class="ot">&lt;-</span> F                                                         <span class="co"># Should we enforce a rule of male monogamy?</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>n.femls <span class="ot">&lt;-</span> <span class="dv">5000</span>                                                               <span class="co"># Number of females</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>n.males <span class="ot">&lt;-</span> <span class="dv">5000</span>                                                               <span class="co"># Number of females</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>expected.meandeg <span class="ot">&lt;-</span> <span class="fl">0.8</span>                                                       <span class="co"># Mean degree (= average # of relationships a person is at any moment in time</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>avg.duration <span class="ot">&lt;-</span> <span class="dv">10</span>                                                            <span class="co"># Mean duration of a relationship (in months)</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>numtimesteps <span class="ot">&lt;-</span> <span class="dv">1200</span>                                                          <span class="co"># Length of simulations (in months)</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>init.number.of.infected.femls <span class="ot">&lt;-</span> <span class="dv">100</span>                                          <span class="co"># How many females are infect at the outset of the simulation?</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>init.number.of.infected.males <span class="ot">&lt;-</span> <span class="dv">100</span>                                          <span class="co"># How many males are infect at the outset of the simulation?</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>beta.by.time.since.inf <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">0.2055</span>,<span class="dv">3</span>),                                    <span class="co"># Probability of transmission per month for active relationship</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rep</span>(<span class="fl">0.0088</span>,<span class="dv">100</span>),<span class="fu">rep</span>(<span class="fl">0.0614</span>,<span class="dv">9</span>),<span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">10</span>))                                <span class="co"># From Hollingsworth et al. 2008</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic calculations and book-keeping</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>n.pop <span class="ot">&lt;-</span> n.femls <span class="sc">+</span> n.males                                                    <span class="co"># Total pop size</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>expected.edges <span class="ot">&lt;-</span> <span class="fu">round</span>(expected.meandeg<span class="sc">*</span>(n.pop)<span class="sc">/</span><span class="dv">2</span>)                           <span class="co"># Expected # of relationships ("edges") in the population at any time</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>prob.dissolution <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>avg.duration                                            <span class="co"># Daily prob of dissolution for an existing relationship</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>time.of.aids.death <span class="ot">&lt;-</span> <span class="fu">length</span>(beta.by.time.since.inf)                          <span class="co"># Length of time from HIV infection until death (in months)</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>cum.num.feml.aids.deaths <span class="ot">&lt;-</span> <span class="dv">0</span>                                                 <span class="co"># Cumulative # of female AIDS deaths</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>cum.num.male.aids.deaths <span class="ot">&lt;-</span> <span class="dv">0</span>                                                 <span class="co"># Cumulative # of female AIDS deaths</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Should we enforce a rule of female monogamy?</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>force.feml.monog <span class="ot">&lt;-</span> F</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Should we enforce a rule of male monogamy?</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>force.male.monog <span class="ot">&lt;-</span> F</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of females</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>n.femls <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of males</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>n.males <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean degree (average number of relationships a person has at any one time)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>expected.meandeg <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean duration of a relationship (in months)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>avg.duration <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Length of the simulation (in months)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>numtimesteps <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># How many females are infected at the start of the simulation?</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>init.number.of.infected.femls <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># How many males are infected at the start of the simulation?</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>init.number.of.infected.males <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of transmission per month for an active relationship,</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># from Hollingsworth et al. 2008</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>beta.by.time.since.inf <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">0.2055</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="fl">0.0088</span>, <span class="dv">100</span>),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">rep</span>(<span class="fl">0.0614</span>, <span class="dv">9</span>), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">10</span>))</span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>feml.prev <span class="ot">&lt;-</span> <span class="fu">vector</span>()                                                         <span class="co"># Sets up a vector to store female prevalence at each time step</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>male.prev <span class="ot">&lt;-</span> <span class="fu">vector</span>()                                                         <span class="co"># Sets up a vector to store male prevalence at each time step</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the female data frame</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>femls <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names=</span><span class="dv">1</span><span class="sc">:</span>n.femls)                                      <span class="co"># Creates a data frame to store info about the females.  One row per female.</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>femls<span class="sc">$</span>hiv.status <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>,n.femls)                                            <span class="co"># Create a variable in the female data frame called "hiv.status".  Give all females the value 0 (for the moment).</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>femls<span class="sc">$</span>inf.time <span class="ot">&lt;-</span> <span class="cn">NA</span>                                                          <span class="co"># Create a variable in the female data frame called "inf.time" (infection time). Give all females an NA (for the moment).</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (init.number.of.infected.femls<span class="sc">&gt;</span><span class="dv">0</span>) {                                        <span class="co"># If there are any initially infected females,</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  init.inf.f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls, init.number.of.infected.femls)              <span class="co"># Sample from vector of female ids with size of initially infected females</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>hiv.status[init.inf.f] <span class="ot">&lt;-</span> <span class="dv">1</span>                                           <span class="co"># Give them infection</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  init.inf.time.f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>(<span class="sc">-</span>time.of.aids.death<span class="sc">+</span><span class="dv">2</span>), </span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                    init.number.of.infected.femls, <span class="at">replace=</span><span class="cn">TRUE</span>)              <span class="co"># Sample times backwards from present to length of infection </span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>inf.time[init.inf.f] <span class="ot">&lt;-</span> init.inf.time.f                               <span class="co"># Assign.</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>}          </span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Male data frame</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic calculations and book-keeping</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Total population size</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>n.pop <span class="ot">&lt;-</span> n.femls <span class="sc">+</span> n.males</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Expected number of relationships ("edges") in the population at any one time</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>expected.edges <span class="ot">&lt;-</span> <span class="fu">round</span>(expected.meandeg <span class="sc">*</span> (n.pop) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-step probability of dissolution for an existing relationship</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>prob.dissolution <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> avg.duration</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Length of time from HIV infection until death (in months)</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>time.of.aids.death <span class="ot">&lt;-</span> <span class="fu">length</span>(beta.by.time.since.inf)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Cumulative number of female AIDS deaths</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>cum.num.feml.aids.deaths <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Cumulative number of male AIDS deaths</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>cum.num.male.aids.deaths <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Vectors to store female and male prevalence at each time step</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>feml.prev <span class="ot">&lt;-</span> <span class="fu">vector</span>()</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>male.prev <span class="ot">&lt;-</span> <span class="fu">vector</span>()</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                                                                              <span class="co"># All parallel to female data frame above</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>males <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names=</span><span class="dv">1</span><span class="sc">:</span>n.males)</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>males<span class="sc">$</span>hiv.status <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>males<span class="sc">$</span>inf.time <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (init.number.of.infected.males<span class="sc">&gt;</span><span class="dv">0</span>) {</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  init.inf.m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males, init.number.of.infected.males)              <span class="co"># Sample from vector of female ids with size of initially infected females</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>hiv.status[init.inf.m] <span class="ot">&lt;-</span> <span class="dv">1</span>                                           <span class="co"># Give them infection</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  init.inf.time.m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>(<span class="sc">-</span>time.of.aids.death<span class="sc">+</span><span class="dv">2</span>), </span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                      init.number.of.infected.males, <span class="at">replace=</span><span class="cn">TRUE</span>)            <span class="co"># Sample times backwards from present to length of infection </span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>inf.time[init.inf.m] <span class="ot">&lt;-</span> init.inf.time.m                               <span class="co"># Assign.</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial contact network</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>          </span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>edgelist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names=</span><span class="dv">1</span><span class="sc">:</span>expected.edges)                            <span class="co"># Create a data frame that will be used to hold the IDs of the relationship pairs</span></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (force.feml.monog<span class="sc">==</span><span class="cn">FALSE</span>) {                                                <span class="co"># If we are *not* enforcing female monogamy,</span></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>      edgelist<span class="sc">$</span>f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls,expected.edges,<span class="at">replace=</span>T)                <span class="co">#   sample from the female IDs with replacement, and assign them to a column in the data frame called "f"</span></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {                                                                      <span class="co">#     otherwise,</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>      edgelist<span class="sc">$</span>f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls,expected.edges,<span class="at">replace=</span>F)                <span class="co">#   sample from the female IDs without replacement, and assign them to a column in the data frame called "f"</span></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (force.male.monog<span class="sc">==</span><span class="cn">FALSE</span>) {                                                <span class="co"># Same for males</span></span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>      edgelist<span class="sc">$</span>m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males,expected.edges,<span class="at">replace=</span>T)</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>      edgelist<span class="sc">$</span>m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males,expected.edges,<span class="at">replace=</span>F)</span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">tabulate</span>(edgelist<span class="sc">$</span>f))                                                   <span class="co"># These rather odd lines provide a check to see a table of relationships per person in the population. When monogamy is enforced for</span></span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">tabulate</span>(edgelist<span class="sc">$</span>m))                                                   <span class="co">#   either sex, the corresponding table should be limited to 0's and 1's; when it os not enforced, the table is not limited.</span></span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="do">####################################                                          # Everything until now was set-up; now this is the core of the simulation.</span></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Time loop                                                                   # We will simulate forward in time, considering transmission, vital dynamics, and relational dynamics at each time point.</span></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (time <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numtimesteps) {</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Transmissions</span></span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>      hiv.status.feml.partners <span class="ot">&lt;-</span> femls<span class="sc">$</span>hiv.status[edgelist<span class="sc">$</span>f]                <span class="co"># Create a vector containing the HIV status for the female partner in each relationship</span></span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>      hiv.status.male.partners <span class="ot">&lt;-</span> males<span class="sc">$</span>hiv.status[edgelist<span class="sc">$</span>m]                <span class="co"># Create a vector containing the HIV status for the male partner in each relationship</span></span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>      sdpf <span class="ot">&lt;-</span> <span class="fu">which</span>(hiv.status.male.partners<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span>                             <span class="co"># Make a vector of IDs for the relationships that are serodiscordant with positive female (SDPF)</span></span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>        hiv.status.feml.partners <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>      f.in.sdpf <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>f[sdpf]                                           <span class="co"># Make a vector of IDs for the females in the SDPF relationships</span></span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>      inf.time.sdpf <span class="ot">&lt;-</span> time <span class="sc">-</span> femls<span class="sc">$</span>inf.time[f.in.sdpf]                       <span class="co"># Make a vector that identifies how long before present these females were infected</span></span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>      prob.trans.sdpf <span class="ot">&lt;-</span> beta.by.time.since.inf[inf.time.sdpf]                <span class="co"># Determine probability of transmission in the SDPM relationships, based on time since the male was infected</span></span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>      trans.sdpf <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">length</span>(sdpf),<span class="dv">1</span>,prob.trans.sdpf)                    <span class="co"># Flip a weighted coin for each SDPF relationship to determine if transmission occurs</span></span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>      newly.inf.males <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>m[sdpf[trans.sdpf<span class="sc">==</span><span class="dv">1</span>]]                      <span class="co"># Double-indexing (an R specialty!)  This lets you get the identities of the newly infected males in one step.</span></span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>      males<span class="sc">$</span>hiv.status[newly.inf.males] <span class="ot">&lt;-</span> <span class="dv">1</span>                                  <span class="co"># Assign the newly infected males an hiv.status of 1</span></span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>      males<span class="sc">$</span>inf.time[newly.inf.males] <span class="ot">&lt;-</span> time                                 <span class="co"># Assign the newly infected males an infection time of time</span></span>
-<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>      sdpm <span class="ot">&lt;-</span> <span class="fu">which</span>(hiv.status.feml.partners<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span>                             <span class="co"># All parallel for serodiscordant with positive male (SDPM)</span></span>
-<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>        hiv.status.male.partners <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>      m.in.sdpm <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>m[sdpm]</span>
-<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>      inf.time.sdpm <span class="ot">&lt;-</span> time <span class="sc">-</span> males<span class="sc">$</span>inf.time[m.in.sdpm]</span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>      prob.trans.sdpm <span class="ot">&lt;-</span> beta.by.time.since.inf[inf.time.sdpm]</span>
-<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>      trans.sdpm <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">length</span>(sdpm),<span class="dv">1</span>,prob.trans.sdpm)    </span>
-<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>      newly.inf.femls <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>f[sdpm[trans.sdpm<span class="sc">==</span><span class="dv">1</span>]]          </span>
-<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>      femls<span class="sc">$</span>hiv.status[newly.inf.femls] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>      femls<span class="sc">$</span>inf.time[newly.inf.femls] <span class="ot">&lt;-</span> time</span>
-<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Deaths to AIDS</span></span>
-<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>      femls.dying.of.AIDS <span class="ot">&lt;-</span> <span class="fu">which</span>(time<span class="sc">-</span>femls<span class="sc">$</span>inf.time<span class="sc">==</span>time.of.aids.death)   <span class="co"># Which females have been HIV+ long enough to die of AIDS?</span></span>
-<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>      males.dying.of.AIDS <span class="ot">&lt;-</span> <span class="fu">which</span>(time<span class="sc">-</span>males<span class="sc">$</span>inf.time<span class="sc">==</span>time.of.aids.death)   <span class="co"># Which females have been HIV+ long enough to die of AIDS?</span></span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>      cum.num.feml.aids.deaths <span class="ot">&lt;-</span>                                             <span class="co"># Increase cumulative # of female AIDS deaths by the newly dying females</span></span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>            cum.num.feml.aids.deaths <span class="sc">+</span> <span class="fu">length</span>(femls.dying.of.AIDS)</span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>      cum.num.male.aids.deaths <span class="ot">&lt;-</span>                                             <span class="co"># Increase cumulative # of male AIDS deaths by the newly dying males</span></span>
-<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>            cum.num.male.aids.deaths <span class="sc">+</span> <span class="fu">length</span>(males.dying.of.AIDS)</span>
-<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a><span class="co"># End of ties because of death</span></span>
-<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>      edges.with.feml.dying.of.aids <span class="ot">&lt;-</span>                                        <span class="co"># Determine the IDs of those relationships involving dying women</span></span>
-<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>            <span class="fu">which</span>(edgelist<span class="sc">$</span>f <span class="sc">%in%</span> femls.dying.of.AIDS)</span>
-<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>      edges.with.male.dying.of.aids <span class="ot">&lt;-</span></span>
-<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>            <span class="fu">which</span>(edgelist<span class="sc">$</span>m <span class="sc">%in%</span> males.dying.of.AIDS)                        <span class="co"># Determine the IDs of those relationships involving dying women</span></span>
-<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>      edges.with.either.dying.of.aids <span class="ot">&lt;-</span></span>
-<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>            <span class="fu">c</span>(edges.with.feml.dying.of.aids,edges.with.male.dying.of.aids)    <span class="co"># Combine the two</span></span>
-<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">length</span>(edges.with.either.dying.of.aids<span class="sc">&gt;</span><span class="dv">0</span>)){                         <span class="co"># Remove those edges from the edgelist</span></span>
-<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>            edgelist <span class="ot">&lt;-</span> edgelist[<span class="sc">-</span>edges.with.either.dying.of.aids,]</span>
-<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a><span class="co"># End of other ties randomly</span></span>
-<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>      edges.coinflip <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">dim</span>(edgelist)[<span class="dv">1</span>],<span class="dv">1</span>,prob.dissolution)           <span class="co"># Flip a weighted coin for each remaning relationship</span></span>
-<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>      edges.to.break <span class="ot">&lt;-</span> <span class="fu">which</span>(edges.coinflip<span class="sc">==</span><span class="dv">1</span>)                              <span class="co"># Make vector of those edges to break</span></span>
-<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">length</span>(edges.to.break<span class="sc">&gt;</span><span class="dv">0</span>)) {                                         <span class="co"># If there are any edges to break,</span></span>
-<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>            edgelist <span class="ot">&lt;-</span> edgelist[<span class="sc">-</span>edges.to.break,]                            <span class="co">#   then break them.</span></span>
-<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a><span class="co"># Add new edges</span></span>
-<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>      num.ties.to.add <span class="ot">&lt;-</span> expected.edges <span class="sc">-</span> <span class="fu">dim</span>(edgelist)[<span class="dv">1</span>]                    <span class="co"># Determine how many edges to add. (We assume same as # broken in this simple model.)</span></span>
-<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (num.ties.to.add<span class="sc">&gt;</span><span class="dv">0</span>) {                                                <span class="co"># If there are edges to add,</span></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (force.feml.monog<span class="sc">==</span>F) {                                        <span class="co">#   and if we are *not* enforcing female monogamy,</span></span>
-<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>                  f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls,num.ties.to.add,<span class="at">replace=</span>T)            <span class="co">#     sample from the female IDs with replacement,</span></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>            } <span class="cf">else</span> {                                                          <span class="co">#   else if we are enforcing female monogamy,</span></span>
-<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>                  femls.with.no.ties <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span>n.femls,edgelist<span class="sc">$</span>f)         <span class="co">#     determine which women do not currently have a relationship, and</span></span>
-<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>                  f <span class="ot">&lt;-</span> <span class="fu">sample</span>(femls.with.no.ties,num.ties.to.add,<span class="at">replace=</span>F)   <span class="co">#     sample from them without replacement</span></span>
-<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (force.male.monog<span class="sc">==</span>F) {                                        <span class="co">#   and if we are *not* enforcing male monogamy,</span></span>
-<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>                  m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males,num.ties.to.add,<span class="at">replace=</span>T)            <span class="co">#     sample from the male IDs with replacement,</span></span>
-<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>            } <span class="cf">else</span> {                                                          <span class="co">#   else if we are enforcing male monogamy,</span></span>
-<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>                  males.with.no.ties <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span>n.males,edgelist<span class="sc">$</span>m)         <span class="co">#     determine which men do not currently have a relationship, and</span></span>
-<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>                  m <span class="ot">&lt;-</span> <span class="fu">sample</span>(males.with.no.ties,num.ties.to.add,<span class="at">replace=</span>F)   <span class="co">#     sample from them without replacement</span></span>
-<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>            new.edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(f,m)                                      <span class="co"># Combine the new males and females into pairs in a data frame</span></span>
-<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>            edgelist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">rbind</span>(edgelist,new.edges))                 <span class="co"># "Bind" that data frame onto the end of our existing esgelist</span></span>
-<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>            <span class="fu">row.names</span>(edgelist) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(edgelist)[<span class="dv">1</span>]                         <span class="co"># Rename the rows of the updated edgelist so they are consecutive numbers again.</span></span>
-<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Insert new births</span></span>
-<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>      new.feml.ids <span class="ot">&lt;-</span> femls.dying.of.AIDS                                     <span class="co"># Make a vector of the IDs of the women who just died. We shall "replace" them with a new arrival, by</span></span>
-<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>      femls<span class="sc">$</span>hiv.status[new.feml.ids] <span class="ot">&lt;-</span> <span class="dv">0</span>                                     <span class="co">#   setting the HIV status of that node back to 0, and</span></span>
-<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>      femls<span class="sc">$</span>inf.time[new.feml.ids] <span class="ot">&lt;-</span> <span class="cn">NA</span>                                      <span class="co">#   setting the infection time for that node back to NA.</span></span>
-<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>      new.male.ids <span class="ot">&lt;-</span> males.dying.of.AIDS                                     <span class="co"># All parallel with males.</span></span>
-<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>      males<span class="sc">$</span>hiv.status[new.male.ids] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>      males<span class="sc">$</span>inf.time[new.male.ids] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a><span class="co"># Track prevalence</span></span>
-<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>feml.prev[time] <span class="ot">&lt;-</span> <span class="fu">mean</span>(femls<span class="sc">$</span>hiv.status)                                     <span class="co"># Calculate current female prevalence and append it onto the female prevalence vector.</span></span>
-<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>male.prev[time] <span class="ot">&lt;-</span> <span class="fu">mean</span>(males<span class="sc">$</span>hiv.status)                                     <span class="co"># Calculate current male prevalence and append it onto the male prevalence vector.</span></span>
-<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a><span class="fu">windows</span>(<span class="dv">20</span>,<span class="dv">10</span>)                                                                <span class="co"># These two lines set up a plotting window</span></span>
-<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))                                                             <span class="co">#    with two panels.</span></span>
-<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(feml.prev,<span class="at">main=</span> <span class="st">"Female prevalence over time "</span>,<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>))             <span class="co"># Plot female prevalence over time</span></span>
-<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(male.prev,<span class="at">main=</span> <span class="st">"Male prevalence over time "</span>,<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>))               <span class="co"># Plot male prevalence over time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the female data frame</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co"># One row per female</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>femls <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names =</span> <span class="dv">1</span><span class="sc">:</span>n.femls)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="co"># HIV status, with everyone starting uninfected (0) for now</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>femls<span class="sc">$</span>hiv.status <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, n.femls)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Infection time, unknown (NA) for now</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>femls<span class="sc">$</span>inf.time <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (init.number.of.infected.femls <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample the initially infected females</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  init.inf.f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls, init.number.of.infected.femls)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Give them infection</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>hiv.status[init.inf.f] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample their infection times, backdated from the present</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  init.inf.time.f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>(<span class="sc">-</span>time.of.aids.death <span class="sc">+</span> <span class="dv">2</span>),</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>                            init.number.of.infected.femls, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>inf.time[init.inf.f] <span class="ot">&lt;-</span> init.inf.time.f</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Male data frame</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="co"># All parallel to the female data frame above</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>males <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names =</span> <span class="dv">1</span><span class="sc">:</span>n.males)</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>males<span class="sc">$</span>hiv.status <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>males<span class="sc">$</span>inf.time <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (init.number.of.infected.males <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  init.inf.m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males, init.number.of.infected.males)</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>hiv.status[init.inf.m] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  init.inf.time.m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>(<span class="sc">-</span>time.of.aids.death <span class="sc">+</span> <span class="dv">2</span>),</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>                            init.number.of.infected.males, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>inf.time[init.inf.m] <span class="ot">&lt;-</span> init.inf.time.m</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial contact network</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a><span class="co"># A data frame to hold the IDs of the relationship pairs</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>edgelist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names =</span> <span class="dv">1</span><span class="sc">:</span>expected.edges)</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign the female side of each edge. Sampling with replacement lets a woman</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="co"># appear in several edges (concurrency); without replacement caps her at one</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="co"># (monogamy).</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (force.feml.monog <span class="sc">==</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  edgelist<span class="sc">$</span>f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls, expected.edges, <span class="at">replace =</span> T)</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  edgelist<span class="sc">$</span>f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls, expected.edges, <span class="at">replace =</span> F)</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Same for the male side of each edge</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (force.male.monog <span class="sc">==</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  edgelist<span class="sc">$</span>m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males, expected.edges, <span class="at">replace =</span> T)</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>  edgelist<span class="sc">$</span>m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males, expected.edges, <span class="at">replace =</span> F)</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a><span class="co"># A quick check: tabulate relationships per person. When monogamy is enforced</span></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a><span class="co"># for a sex, its table is limited to 0's and 1's; otherwise it is not.</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">tabulate</span>(edgelist<span class="sc">$</span>f))</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">tabulate</span>(edgelist<span class="sc">$</span>m))</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a><span class="co"># Time loop</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything above was set-up. This loop is the core of the simulation: at each</span></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a><span class="co"># time step we simulate transmission, vital dynamics, and relational dynamics.</span></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (time <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numtimesteps) {</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- Transmissions ---</span></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>  <span class="co"># HIV status of the female and male partner in each relationship</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>  hiv.status.feml.partners <span class="ot">&lt;-</span> femls<span class="sc">$</span>hiv.status[edgelist<span class="sc">$</span>f]</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>  hiv.status.male.partners <span class="ot">&lt;-</span> males<span class="sc">$</span>hiv.status[edgelist<span class="sc">$</span>m]</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Relationships that are serodiscordant with a positive female (SDPF)</span></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>  sdpf <span class="ot">&lt;-</span> <span class="fu">which</span>(hiv.status.male.partners <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>                  hiv.status.feml.partners <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The females in those relationships, and how long they have been infected</span></span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>  f.in.sdpf <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>f[sdpf]</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>  inf.time.sdpf <span class="ot">&lt;-</span> time <span class="sc">-</span> femls<span class="sc">$</span>inf.time[f.in.sdpf]</span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transmission probability, based on time since the female was infected</span></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>  prob.trans.sdpf <span class="ot">&lt;-</span> beta.by.time.since.inf[inf.time.sdpf]</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flip a weighted coin for each relationship to see if transmission occurs</span></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>  trans.sdpf <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">length</span>(sdpf), <span class="dv">1</span>, prob.trans.sdpf)</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The newly infected males (double-indexing gets their IDs in one step)</span></span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>  newly.inf.males <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>m[sdpf[trans.sdpf <span class="sc">==</span> <span class="dv">1</span>]]</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>hiv.status[newly.inf.males] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>inf.time[newly.inf.males] <span class="ot">&lt;-</span> time</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>  <span class="co"># All parallel for serodiscordant with a positive male (SDPM)</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>  sdpm <span class="ot">&lt;-</span> <span class="fu">which</span>(hiv.status.feml.partners <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>                  hiv.status.male.partners <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>  m.in.sdpm <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>m[sdpm]</span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>  inf.time.sdpm <span class="ot">&lt;-</span> time <span class="sc">-</span> males<span class="sc">$</span>inf.time[m.in.sdpm]</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>  prob.trans.sdpm <span class="ot">&lt;-</span> beta.by.time.since.inf[inf.time.sdpm]</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>  trans.sdpm <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">length</span>(sdpm), <span class="dv">1</span>, prob.trans.sdpm)</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>  newly.inf.femls <span class="ot">&lt;-</span> edgelist<span class="sc">$</span>f[sdpm[trans.sdpm <span class="sc">==</span> <span class="dv">1</span>]]</span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>hiv.status[newly.inf.femls] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>inf.time[newly.inf.femls] <span class="ot">&lt;-</span> time</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- Deaths to AIDS ---</span></span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Who has been HIV positive long enough to die of AIDS?</span></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>  femls.dying.of.AIDS <span class="ot">&lt;-</span> <span class="fu">which</span>(time <span class="sc">-</span> femls<span class="sc">$</span>inf.time <span class="sc">==</span> time.of.aids.death)</span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>  males.dying.of.AIDS <span class="ot">&lt;-</span> <span class="fu">which</span>(time <span class="sc">-</span> males<span class="sc">$</span>inf.time <span class="sc">==</span> time.of.aids.death)</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the newly dying to the cumulative death counts</span></span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>  cum.num.feml.aids.deaths <span class="ot">&lt;-</span> cum.num.feml.aids.deaths <span class="sc">+</span> <span class="fu">length</span>(femls.dying.of.AIDS)</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>  cum.num.male.aids.deaths <span class="ot">&lt;-</span> cum.num.male.aids.deaths <span class="sc">+</span> <span class="fu">length</span>(males.dying.of.AIDS)</span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- End of ties because of death ---</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Relationships involving someone who just died, removed from the edgelist</span></span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>  edges.with.feml.dying.of.aids <span class="ot">&lt;-</span> <span class="fu">which</span>(edgelist<span class="sc">$</span>f <span class="sc">%in%</span> femls.dying.of.AIDS)</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>  edges.with.male.dying.of.aids <span class="ot">&lt;-</span> <span class="fu">which</span>(edgelist<span class="sc">$</span>m <span class="sc">%in%</span> males.dying.of.AIDS)</span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>  edges.with.either.dying.of.aids <span class="ot">&lt;-</span> <span class="fu">c</span>(edges.with.feml.dying.of.aids, edges.with.male.dying.of.aids)</span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(edges.with.either.dying.of.aids <span class="sc">&gt;</span> <span class="dv">0</span>)) {</span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>    edgelist <span class="ot">&lt;-</span> edgelist[<span class="sc">-</span>edges.with.either.dying.of.aids, ]</span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- End of other ties randomly ---</span></span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flip a weighted coin for each remaining relationship, and break the winners</span></span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>  edges.coinflip <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">dim</span>(edgelist)[<span class="dv">1</span>], <span class="dv">1</span>, prob.dissolution)</span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>  edges.to.break <span class="ot">&lt;-</span> <span class="fu">which</span>(edges.coinflip <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(edges.to.break <span class="sc">&gt;</span> <span class="dv">0</span>)) {</span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>    edgelist <span class="ot">&lt;-</span> edgelist[<span class="sc">-</span>edges.to.break, ]</span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- Add new edges ---</span></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add as many new edges as were lost, keeping the edge count fixed</span></span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a>  num.ties.to.add <span class="ot">&lt;-</span> expected.edges <span class="sc">-</span> <span class="fu">dim</span>(edgelist)[<span class="dv">1</span>]</span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (num.ties.to.add <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw the female side: with replacement if concurrency is allowed,</span></span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a>    <span class="co"># otherwise from women who currently have no relationship</span></span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (force.feml.monog <span class="sc">==</span> F) {</span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a>      f <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.femls, num.ties.to.add, <span class="at">replace =</span> T)</span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a>      femls.with.no.ties <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span>n.femls, edgelist<span class="sc">$</span>f)</span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a>      f <span class="ot">&lt;-</span> <span class="fu">sample</span>(femls.with.no.ties, num.ties.to.add, <span class="at">replace =</span> F)</span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Same for the male side</span></span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (force.male.monog <span class="sc">==</span> F) {</span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a>      m <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n.males, num.ties.to.add, <span class="at">replace =</span> T)</span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a>      males.with.no.ties <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span>n.males, edgelist<span class="sc">$</span>m)</span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a>      m <span class="ot">&lt;-</span> <span class="fu">sample</span>(males.with.no.ties, num.ties.to.add, <span class="at">replace =</span> F)</span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pair the new females and males and bind them onto the edgelist</span></span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>    new.edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(f, m)</span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>    edgelist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">rbind</span>(edgelist, new.edges))</span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>    <span class="fu">row.names</span>(edgelist) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(edgelist)[<span class="dv">1</span>]</span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- Insert new births ---</span></span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Replace each person who died of AIDS with a new, uninfected arrival:</span></span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>  <span class="co"># reset HIV status to 0 and infection time to NA</span></span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>  new.feml.ids <span class="ot">&lt;-</span> femls.dying.of.AIDS</span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>hiv.status[new.feml.ids] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>  femls<span class="sc">$</span>inf.time[new.feml.ids] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>  <span class="co"># All parallel with males</span></span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>  new.male.ids <span class="ot">&lt;-</span> males.dying.of.AIDS</span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>hiv.status[new.male.ids] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>  males<span class="sc">$</span>inf.time[new.male.ids] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- Track prevalence ---</span></span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Record current female and male prevalence for this time step</span></span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a>  feml.prev[time] <span class="ot">&lt;-</span> <span class="fu">mean</span>(femls<span class="sc">$</span>hiv.status)</span>
+<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a>  male.prev[time] <span class="ot">&lt;-</span> <span class="fu">mean</span>(males<span class="sc">$</span>hiv.status)</span>
+<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up a two-panel plotting window and plot prevalence over time</span></span>
+<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a><span class="fu">windows</span>(<span class="dv">20</span>, <span class="dv">10</span>)</span>
+<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(feml.prev, <span class="at">main =</span> <span class="st">"Female prevalence over time "</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>))</span>
+<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(male.prev, <span class="at">main =</span> <span class="st">"Male prevalence over time "</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
