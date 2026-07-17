@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 1: The local level, conceptually – Concurrency Tutorial</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ex2-pop-conceptual.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-df8a5dc4faa71e219bc521d2954a8932.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Concurrency Tutorial</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.epimodel.org"> 
+<span class="menu-text">EpiModel</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://epimodel.github.io/concurrency.sim"> 
+<span class="menu-text">Interactive app</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EpiModel/ConcurrencyTutorial"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ex1-local-conceptual.html">Exercises</a></li><li class="breadcrumb-item"><a href="./ex1-local-conceptual.html">1. Local, conceptual</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Exercises</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex1-local-conceptual.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">1. Local, conceptual</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex2-pop-conceptual.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Population, conceptual</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex3-local-numerical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Local, numerical</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex4-pop-numerical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Population, numerical</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Summary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Background</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rules of probability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction to R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">More resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#questions-answers" id="toc-questions-answers" class="nav-link" data-scroll-target="#questions-answers">Questions &amp; Answers</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#exercise1fu" id="toc-exercise1fu" class="nav-link" data-scroll-target="#exercise1fu">Follow-up</a>
+  <ul class="collapse">
+  <li><a href="#alternate-scenario-1.-sam-and-chris-initiate-sex-at-the-same-time-and-chriss-sexual-acts-occur-earlier-than-sams-on-average" id="toc-alternate-scenario-1.-sam-and-chris-initiate-sex-at-the-same-time-and-chriss-sexual-acts-occur-earlier-than-sams-on-average" class="nav-link" data-scroll-target="#alternate-scenario-1.-sam-and-chris-initiate-sex-at-the-same-time-and-chriss-sexual-acts-occur-earlier-than-sams-on-average">Alternate Scenario 1. Sam and Chris initiate sex at the same time, and Chris’s sexual acts occur earlier than Sam’s on average</a></li>
+  <li><a href="#alternate-scenario-2.-sam-and-chris-complete-sex-at-the-same-time-and-chriss-sexual-acts-occur-later-than-sams-on-average" id="toc-alternate-scenario-2.-sam-and-chris-complete-sex-at-the-same-time-and-chriss-sexual-acts-occur-later-than-sams-on-average" class="nav-link" data-scroll-target="#alternate-scenario-2.-sam-and-chris-complete-sex-at-the-same-time-and-chriss-sexual-acts-occur-later-than-sams-on-average">Alternate Scenario 2. Sam and Chris complete sex at the same time, and Chris’s sexual acts occur later than Sam’s on average</a></li>
+  <li><a href="#alternate-scenario-3.-sam-and-chris-begin-and-complete-sex-at-the-same-time-chriss-relationships-are-twice-as-long-as-sams-but-chris-has-only-half-as-many-coital-acts-with-each-partner-as-sam-does.-thus-overall-chris-and-sam-have-the-same-total-frequency-of-sex." id="toc-alternate-scenario-3.-sam-and-chris-begin-and-complete-sex-at-the-same-time-chriss-relationships-are-twice-as-long-as-sams-but-chris-has-only-half-as-many-coital-acts-with-each-partner-as-sam-does.-thus-overall-chris-and-sam-have-the-same-total-frequency-of-sex." class="nav-link" data-scroll-target="#alternate-scenario-3.-sam-and-chris-begin-and-complete-sex-at-the-same-time-chriss-relationships-are-twice-as-long-as-sams-but-chris-has-only-half-as-many-coital-acts-with-each-partner-as-sam-does.-thus-overall-chris-and-sam-have-the-same-total-frequency-of-sex.">Alternate Scenario 3. Sam and Chris begin and complete sex at the same time; Chris’s relationships are twice as long as Sam’s, but <em>Chris has only half as many coital acts with each partner as Sam does</em>. Thus, overall Chris and Sam have the same total frequency of sex.</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ex1-local-conceptual.html">Exercises</a></li><li class="breadcrumb-item"><a href="./ex1-local-conceptual.html">1. Local, conceptual</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Exercise 1: The local level, conceptually</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this exercise, we will focus on two people. Let’s call them Sam and Chris. Each of them had two sex partners in the last six months. And each of those partnerships lasted for three months. All four partnerships had the same number and type of unprotected sex acts in them. The only difference is that Sam’s partners were sequential, while Chris’s partners were concurrent for one month. (Notice the simple mnemonic: sequential Sam, concurrent Chris) During the entire six month period, nobody involved had any other partners.</p>
+<p>We can picture this scenario, with each person’s first partner colored red and second partner blue, as follows:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/samandchris.png" class="img-fluid figure-img" width="500"></p>
+<figcaption>Partnership timelines for sequential Sam and concurrent Chris</figcaption>
+</figure>
+</div>
+<p>Notice all of the components that we have kept identical between the two cases: Sam and Chris each have the same number of new partners during the six-month period; they each have the same number of sex acts with each partner; their relationships each last the same length; and their sex occurs on average no earlier or later than each other (that is, both have their sex acts evenly centered around the beginning of June).</p>
+</section>
+<section id="questions-answers" class="level2">
+<h2 class="anchored" data-anchor-id="questions-answers">Questions &amp; Answers</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Questions</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Answers</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Now, think about each of the following questions. For each question, decide on one of four answers: <strong>Sam</strong> is more likely; <strong>Chris</strong> is more likely; <strong>Both</strong> are equally likely; or perhaps <strong>Not Enough Information</strong>.</p>
+<section id="scenario-1-the-blue-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-red-partners-are-uninfected." class="level4">
+<h4 class="anchored" data-anchor-id="scenario-1-the-blue-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-red-partners-are-uninfected.">Scenario 1: The blue partners are each infected with the same STI, while Sam, Chris and the red partners are uninfected.</h4>
+<p><strong>Question 1</strong>. Who is more likely to get infected—Sam or Chris?</p>
+<p><strong>Question 2</strong>. If Sam and Chris do get infected, who is more likely to transmit to their red partner?</p>
+<p><strong>Question 3</strong>. If Sam and Chris do get infected, who is likely to do so sooner? <br></p>
+</section>
+<section id="scenario-2-the-red-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-blue-partners-are-uninfected." class="level4">
+<h4 class="anchored" data-anchor-id="scenario-2-the-red-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-blue-partners-are-uninfected.">Scenario 2: The red partners are each infected with the same STI, while Sam, Chris and the blue partners are uninfected.</h4>
+<p><strong>Question 1</strong>. Who is more likely to get infected—Sam or Chris?</p>
+<p><strong>Question 2</strong>. If Sam and Chris do get infected, who is more likely to transmit to their blue partner?</p>
+<p><strong>Question 3</strong>. If Sam and Chris do get infected, who is likely to do so sooner?</p>
+<p><strong>Question 4</strong>. If Sam and Chris do infect their blue partner, who is likely to do so sooner in time? Sooner after getting infected themselves?</p>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<section id="scenario-1-the-blue-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-red-partners-are-uninfected.-1" class="level4">
+<h4 class="anchored" data-anchor-id="scenario-1-the-blue-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-red-partners-are-uninfected.-1">Scenario 1: The blue partners are each infected with the same STI, while Sam, Chris and the red partners are uninfected.</h4>
+<p><strong>Question 1</strong>: Who is more likely to get infected—Sam or Chris? <strong>Both are equally likely</strong>. Sam and Chris can each be infected by their blue partner only. And they each have the same amount and type of exposure (sex acts) with them.</p>
+<p><strong>Question 2</strong>: If Sam and Chris do get infected, who is more likely to transmit to their red partner? <strong>Chris</strong>. In fact, Sam has zero probability of transmitting to the red partner. Chris is capable of doing so; we don’t know the exact probability, but it is presumably greater than 0. Let us call this phenomenon “<strong>backwards transmission</strong>.” The word “backwards” refers to the fact that because Chris has concurrent partners, an infection can be transmitted from the second partner Chris acquired (blue) <strong>back</strong> to the first partner Chris acquired (red).</p>
+<p><strong>Question 3</strong>: If Sam and Chris do get infected, who is likely to do so sooner? <strong>Chris</strong>. Chris’s window of exposure to the blue partner occurs earlier than Sam’s, even though overall (across both partners) Chris does not have sex any earlier than Sam does on average. We will call this effect “<strong>accelerated acquisition.</strong>”</p>
+</section>
+<section id="scenario-2-the-red-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-blue-partners-are-uninfected.-1" class="level4">
+<h4 class="anchored" data-anchor-id="scenario-2-the-red-partners-are-each-infected-with-the-same-sti-while-sam-chris-and-the-blue-partners-are-uninfected.-1">Scenario 2: The red partners are each infected with the same STI, while Sam, Chris and the blue partners are uninfected.</h4>
+<p><strong>Question 1</strong>: Who is more likely to get infected—Sam or Chris? <strong>Both are equally likely</strong>. Sam and Chris can each be infected by their red partner only. And they each have the same amount and type of exposure (sex acts) with them.</p>
+<p><strong>Question 2</strong>: If Sam and Chris do get infected, who is more likely to transmit to their blue partner? <strong>Not enough information</strong>. This one is the most tricky; the answer depends on a number of pieces, including the overall level of transmissibility of the infection in question; whether or not that level varies over time; and the frequency of sex acts within each relationship. Clearly, both Sam and Chris are capable of infecting their blue partner. Beyond that, there are two different possible effects that work in opposite directions:</p>
+<p><em>Favoring transmission by Chris</em>: Some STIs can be cleared by the body naturally, or as result of treatment. Examples include gonorrhea and chlamydia. Other STIs, like HIV, cannot be cured, but have a short period early in infection during which an individual is highly infectious to others. For HIV, this period lasts perhaps 2-3 months, and an individual may be 10 to 40 times more infectious than they are subsequently. (See Hollingsworth et al.&nbsp;2008, Abu Raddad and Longini 2008, and Pinkerton 2008 for these estimates). In these contexts, Chris may be more likely to infect the blue partner than Sam is, since Chris is more likely to be having sex with the blue partner during the time shortly after being infected by red, while still infected (for curable STIs) or highly infectious (for HIV). For example, if Sam and Chris are each infected by their red partner at the beginning of those partnerships, three months will pass before Sam has sex with blue for the first time, but only two months will pass for Chris. If they are each infected one month into their relationships with red, then two months will pass for Sam before initiating sex with blue, and only one month for Chris. And so on. In each case, Sam is more likely to have been cured of the disease, or to have moved out of the period of high infectiousness before being with blue. Let us call this effect “<strong>acute infectivity</strong>”. We will use the term to refer to all cases in which infectiousness goes down with time, whether to 0 or to some positive value, and whether through cure or through treatment or through the natural history of the infection. Note that the likelihood of Sam and Chris getting infected early or late in their relationship with the red partner—which determines the importance of the acute infectivity effect—is a function of overall infectiousness per act and number of acts per relationship.</p>
+<p><em>Favoring transmission by Sam</em>: If Chris is infected towards the tail end of the relationship with red, then some of the sex acts that Chris has with blue may have already happened. Thus, some of Chris’s opportunities to infect blue will be missed, and the probability of transmitting to blue will decline. Sam does not face this; no matter when Sam is infected by red, it is always before the start of any sex acts with blue. We will call this “<strong>reduced forward transmission</strong>.” Note that, as with acute infectivity, the likelihood of Sam and Chris getting infected early or late in their relationship with the red partner—which determines the importance of the reduced forward transmission effect—is a function of overall infectiousness per act and number of acts per relationship.</p>
+<p>So, the answer to this question may be Sam, or it may be Chris, depending on the exact nature of the infectiousness of the STI of interest over time, and the number of sex acts. We will return to this point in detail on the next page, and explore it mathematically in later exercises.</p>
+<p><strong>Question 3:</strong> If Sam and Chris do get infected, who is likely to do so sooner? <strong>Sam</strong>. Sam’s window of exposure to the red partner occurs earlier than Chris’s, even though overall (across both partners) Sam does not have sex any earlier than Chris does on average. However, the implications of this depend on the answer to the next question….</p>
+<p><strong>Question 4:</strong> If Sam and Chris do infect their blue partner, who is likely to do so sooner in time? Sooner after getting infected themselves? <strong>Chris</strong>, on both counts. For the first half of the question, we simply note that the blue partner’s exposure period to Chris occurs earlier in time than their exposure period to Sam. For the second half of the question, we use the same basic logic as in the description of acute infectivity above (under Scenario 2, Question 2). If Sam and Chris are each infected at the beginning of their relationships with red, the range over which Sam might infect blue is 3-6 months later, but for Chris, it’s 2-5 months later. If Sam and Chris are each infected during their second month with red, the range over which Sam might infect blue is 2-5 months later, but for Chris, it’s 1-4 months later. And so on. Although the logic is roughly the same as for the “acute infectivity” process, the implication here is slightly different. There, we were focused on the fact that Chris would be more likely to be highly infectious when encountering blue than Sam would. But here we see that even in the absence of any mechanism that causes greater infectivity during a short period after infection, with concurrency an STI can “hop” along chains of three people (from person A to B to C) on average more quickly than it could when people are practicing sequentially monogamous relationships of the same length. We will call this phenomenon “<strong>path acceleration.</strong>” So despite the fact that Sam was probably infected earlier than Chris was (as we saw in the answer to the previous question), the disease ends up moving further along to another member of the population sooner via Chris. This is because sequential monogamy causes the infection to remain “locked” in the partnership between Sam and the red partner until that relationship ends; this does not happen with Chris and the red partner because of concurrency.</p>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>We have explored an example in which Sam and Chris each have the same number of new partners during the six-month period; they each have the same number of sex acts with each partner; their relationships each last the same length; and their sex acts occur on average no earlier or later than each other’s (that is, both have their sex acts evenly centered around the same time point). Below, and in later exercises, you will have the opportunity to consider other models. But, for now, <strong>what do the answers we saw on the previous page tell us about the effects of concurrency in this scenario? A few very important things:</strong></p>
+<p>Sam and Chris had the exact same risk of getting infected from their red partner. They also had the exact same risk of getting infected from their blue partner. Thus, Sam and Chris had the exact same risk of getting infected overall.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Insight 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All else being equal, whether one’s partnerships are sequential or concurrent makes no difference whatsoever to one’s risk of acquiring an STI.</p>
+</div>
+</div>
+<p>On the other hand, if they do get infected, there are three different processes that affect how likely they are to transmit to someone else. Two of these increase Chris’s probability of transmitting relative to Sam’s, and one increases Sam’s relative to Chris’s. These are:</p>
+<ul>
+<li>The “backwards transmission” effect: increases Chris’s probability of transmitting relative to Sam’s.</li>
+<li>The “acute infectivity” effect: increases Chris’s probability of transmitting relative to Sam’s.</li>
+<li>The “reduced forward transmission” effect: increases Sam’s probability of transmitting relative to Chris’s.</li>
+</ul>
+<p>In terms of backwards transmission, the distinction between concurrency and sequential monogamy is absolute: concurrency generates backwards transmission, and sequential monogamy does not.</p>
+<p>In terms of forward transmission: there are two different effects, which work in opposite directions, so the picture is less consistent. Since we are only exploring conceptually right now, we cannot be much more precise than this. However, now that we have identified the three effects, we can also provide some foreshadowing to <a href="./ex3-local-numerical.html">Exercise 3</a>, which explores the same effects more mathematically. In the range of scenarios we consider there, we will see that the effect of backwards transmission always outweighs that of missed forward transmission. That is, when one combines their two effects, Chris is always more likely to transmit than Sam, although the exact difference depends on the details. More generally, the broader literature on concurrency shows that across ranges of realistic diseases and relational dynamics, the collective effect of these various pathways strongly favors transmission by those with concurrent partners over sequential.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Insight 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All else being equal, whether one’s partnerships are sequential or concurrent has three effects on one’s probability of transmitting an STI. The collective effect of these generally favors transmission by the person with concurrent partners, and sometimes by a very large amount, depending on the level of infectiousness and its change over time.</p>
+</div>
+</div>
+<p>Both Sam and Chris can acquire from red and transmit to blue. But even here, in Chris’s case the STI is capable of spreading more quickly through this path than in Sam’s case. In Sam’s case, the STI must lose time being “locked” in the monogamous partnership, waiting for it to end and for the next one to begin; the infection does not need to experience the same waiting period with Chris. If the blue partner did have other partners, then the infection would be able to proceed further on through the network more quickly.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Insight 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Insight 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sequential partnerships lead to STIs spending some amount of time being “locked” in a partnership; concurrent partnerships allow it to move along a chain of three people (and then perhaps on from there) more quickly.</p>
+</div>
+</div>
+<p>In <a href="./ex1-local-conceptual.html">Exercise 1</a>, and in the insights that resulted from it, we were largely focused on the question of concurrency’s effect at the local level, specifically among an individual and two of their (sequential or concurrent) partners. In reality, of course, these three people are embedded in much larger social networks, something we began to hint at with Insight 3. Any of the three may have additional partners, either concurrently or subsequently; those partners will have other partners, and so on. Differences at the local level have the potential to aggregate up to the population level in different ways. So now that we have some insight into how concurrency affects transmission locally, let us consider in <a href="./ex2-pop-conceptual.html">Exercise 2</a> how much this can matter to the population as a whole.</p>
+<p>Note that we made some assumptions about Chris’s and Sam’s sexual partnerships at the outset in order to make them as comparable as possible, while allowing one to have concurrency and the other not. But, the approach we took is not the only one possible, nor the only one worth exploring. Those who wish to consider this in more depth may choose to do so in the <a href="#exercise1fu">Follow-Up</a>. Other may wish to proceed to <a href="./ex2-pop-conceptual.html">Exercise 2</a>.</p>
+</section>
+<section id="exercise1fu" class="level2">
+<h2 class="anchored" data-anchor-id="exercise1fu">Follow-up</h2>
+<p>In <a href="./ex1-local-conceptual.html">Exercise 1</a>, we set up the example so that Chris and Sam were similar on as many important metrics as possible, while still allowing Chris to have concurrent relationships, and Sam to have sequential relationships. Recall the example:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/samandchris.png" class="img-fluid figure-img" width="500"></p>
+<figcaption>Partnership timelines for sequential Sam and concurrent Chris</figcaption>
+</figure>
+</div>
+<p>Items that were held equal across Chris and Sam include:</p>
+<ul>
+<li>Chris and Sam each have the same number of new relationships over the 6-month period</li>
+<li>Chris and Sam each have relationships of the same length</li>
+<li>Chris and Sam each have the same frequency of coital acts with their partners</li>
+<li>Chris and Sam each have sex at the same time on average—both are arranged symmetrically around the beginning of June.</li>
+</ul>
+<p>However, some things needed to be different. Obviously, we wanted one to have concurrent partners and the other not, by design. But doing that requires some other aspects to differ as well. In our example, these included:</p>
+<ul>
+<li>Chris began having sex later than Sam</li>
+<li>Chris stopped having sex earlier than Sam</li>
+<li>Chris had time periods with more sex than Sam, and other time periods with no sex at all. On the other hand, Sam had a constant coital frequency across the six months.</li>
+</ul>
+<p>Mathematically, one cannot have everything on both lists above match up between Chris and Sam when Chris is having concurrent partners and Sam is not. Something else must differ. We chose the above configuration because we felt that it most matched people’s intuition for a fair comparison that allows one to isolate the effect of concurrency as much as possible. But one might chose other comparisons as well. Below we include three examples that we encourage readers to explore on their own, identifying what is similar and what is different between Sam and Chris, and how each of the questions in <a href="./ex1-local-conceptual.html">Exercise 1</a> about probabilities and timings of transmission would be answered for that scenario. Readers should also consider defining and exploring scenarios of their own, remembering, of course, to be mindful that all insights derived must be interpreted in light of the similarities and differences between Chris and Sam for that scenario.</p>
+<section id="alternate-scenario-1.-sam-and-chris-initiate-sex-at-the-same-time-and-chriss-sexual-acts-occur-earlier-than-sams-on-average" class="level3">
+<h3 class="anchored" data-anchor-id="alternate-scenario-1.-sam-and-chris-initiate-sex-at-the-same-time-and-chriss-sexual-acts-occur-earlier-than-sams-on-average">Alternate Scenario 1. Sam and Chris initiate sex at the same time, and Chris’s sexual acts occur earlier than Sam’s on average</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/samandchrisleft.png" class="img-fluid figure-img" width="500"></p>
+<figcaption>Alternate scenario in which Sam and Chris start having sex at the same time</figcaption>
+</figure>
+</div>
+</section>
+<section id="alternate-scenario-2.-sam-and-chris-complete-sex-at-the-same-time-and-chriss-sexual-acts-occur-later-than-sams-on-average" class="level3">
+<h3 class="anchored" data-anchor-id="alternate-scenario-2.-sam-and-chris-complete-sex-at-the-same-time-and-chriss-sexual-acts-occur-later-than-sams-on-average">Alternate Scenario 2. Sam and Chris complete sex at the same time, and Chris’s sexual acts occur later than Sam’s on average</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/samandchrisright.png" class="img-fluid figure-img" width="500"></p>
+<figcaption>Alternate scenario in which Sam and Chris finish having sex at the same time</figcaption>
+</figure>
+</div>
+</section>
+<section id="alternate-scenario-3.-sam-and-chris-begin-and-complete-sex-at-the-same-time-chriss-relationships-are-twice-as-long-as-sams-but-chris-has-only-half-as-many-coital-acts-with-each-partner-as-sam-does.-thus-overall-chris-and-sam-have-the-same-total-frequency-of-sex." class="level3">
+<h3 class="anchored" data-anchor-id="alternate-scenario-3.-sam-and-chris-begin-and-complete-sex-at-the-same-time-chriss-relationships-are-twice-as-long-as-sams-but-chris-has-only-half-as-many-coital-acts-with-each-partner-as-sam-does.-thus-overall-chris-and-sam-have-the-same-total-frequency-of-sex.">Alternate Scenario 3. Sam and Chris begin and complete sex at the same time; Chris’s relationships are twice as long as Sam’s, but <em>Chris has only half as many coital acts with each partner as Sam does</em>. Thus, overall Chris and Sam have the same total frequency of sex.</h3>
+<p>This scenario is an example of <strong>coital dilution</strong>, wherein Chris has only half as many sex acts per unit time within each relationship as Sam does.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/samandchriscoitaldilution.png" class="img-fluid figure-img" width="500"></p>
+<figcaption>Alternate scenario with coital dilution, Chris having longer relationships with fewer acts each</figcaption>
+</figure>
+</div>
+<p>Note that across all scenarios, one of the things on which we maintain consistency is the total number of coital acts had by Sam and Chris. Reducing one relative to the other makes it impossible to identify the effect of concurrency itself, since a reduction in sex will in and of itself have a major impact on disease transmission.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/EpiModel\.github\.io\/ConcurrencyTutorial\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Overview">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ex2-pop-conceptual.html" class="pagination-link" aria-label="2. Population, conceptual">
+        <span class="nav-page-text">2. Population, conceptual</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ © 2025 EpiModel Research Lab, Emory University
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://epimodel.github.io/concurrency.sim" target="_blank">
+<p>Interactive app</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.epimodel.org" target="_blank">
+<p>EpiModel</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EpiModel/ConcurrencyTutorial" target="_blank">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -6,12 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Steven M. Goodreau">
-<meta name="author" content="Samuel M. Jenness">
-<meta name="author" content="Martina Morris">
-<meta name="dcterms.date" content="2026-07-17">
 
-<title>Concurrency Tutorial</title>
+<title>Summary of exercises – Concurrency Tutorial</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -36,7 +32,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ex1-local-conceptual.html" rel="next">
+<link href="./prob-tutorial.html" rel="next">
+<link href="./ex4-pop-numerical.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary.html">Summary</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -142,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -183,7 +180,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+  <a href="./summary.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Summary</span></a>
   </div>
 </li>
@@ -221,47 +218,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#what-concurrency-is-and-is-not" id="toc-what-concurrency-is-and-is-not" class="nav-link active" data-scroll-target="#what-concurrency-is-and-is-not">What concurrency is (and is not)</a></li>
-  <li><a href="#how-concurrency-works-and-does-not" id="toc-how-concurrency-works-and-does-not" class="nav-link" data-scroll-target="#how-concurrency-works-and-does-not">How concurrency works (and does not)</a></li>
-  <li><a href="#what-this-tutorial-is-and-is-not" id="toc-what-this-tutorial-is-and-is-not" class="nav-link" data-scroll-target="#what-this-tutorial-is-and-is-not">What this tutorial is (and is not)</a></li>
-  <li><a href="#the-four-exercises" id="toc-the-four-exercises" class="nav-link" data-scroll-target="#the-four-exercises">The four exercises</a></li>
-  <li><a href="#authors-and-license" id="toc-authors-and-license" class="nav-link" data-scroll-target="#authors-and-license">Authors and license</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Concurrency Tutorial</h1>
-<p class="subtitle lead">How relational concurrency does (and does not) shape HIV and STI epidemics</p>
+<h1 class="title">Summary of exercises</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Authors</div>
-    <div class="quarto-title-meta-contents">
-             <p>Steven M. Goodreau </p>
-             <p>Samuel M. Jenness </p>
-             <p>Martina Morris </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">July 17, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -271,78 +243,17 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The concept of relational concurrency appears frequently in the literature on HIV epidemiology, and is believed by some researchers to represent a key factor in understanding large disparities in the prevalence of HIV or other sexually transmitted infections (STIs) among populations. On the one hand, the basic logic behind the hypothesis is straightforward; on the other hand, it entails some subtleties that can run counter to many people’s intuition. Thus, it can be somewhat tricky to understand, which has caused some confusion among both researchers and the general public.</p>
-<p>The aim of this website is to provide intuitive, easy-to-use tools to help researchers and the general public to understand the concept of relational concurrency and the ways in which it can affect the spread of sexually transmitted infections like HIV. The site contains some introductory overviews, followed by a series of four exercises.</p>
-<p>The four exercises focus on relational concurrency at the local level and the population level; each level is first explored through a conceptual exercise, and then by a more complex numerical exercise.</p>
-<p>The conceptual exercises do not require any special mathematical background, and are geared at providing a basic but powerful understanding of relational concurrency. Some readers may wish to explore only the conceptual exercises. The numerical exercises require some additional background. Specifically, <a href="./ex3-local-numerical.html">Exercise 3</a> requires an ability to calculate basic probabilities. <a href="./ex4-pop-numerical.html">Exercise 4</a> requires familiarity with the R programming language. We thus provide a tutorial for each of these components. Readers may wish to try the exercises first, to see if they are able to follow them; if not, they can switch over to the tutorials.</p>
-<p>Throughout the exercises, we will use the term “concurrency” as short-hand for “relational concurrency” or “sexual relationship concurrency.” One may see all of these terms in the literature; they mean the same thing.</p>
-<section id="what-concurrency-is-and-is-not" class="level2">
-<h2 class="anchored" data-anchor-id="what-concurrency-is-and-is-not">What concurrency is (and is not)</h2>
-<p><strong>Relational concurrency</strong> refers to the situation in which one individual is involved in <strong>two or more relationships that overlap in time</strong>.</p>
-<p>Concurrency is <strong>not</strong> simply a synonym for multiple partnerships. The phrase “multiple partnerships” is typically used in HIV/STI epidemiology to refer the case of people having multiple sex partners over the course of some time period—for example, a year. Within this definition, each pair of multiple partners can be sequential (one ends before the next one begins; also called serial monogamy), or they can be concurrent. In order for someone to have concurrent partnerships, they must have multiple partnerships (at least two); but the reverse is not necessarily true—one can have multiple partners without having concurrent partners.</p>
-<p>In the following examples, let the red line represent the time that person A is in a sexual relationship with person B, and the blue line represent the time that person A is in a sexual relationship with person C. All three cases represent Person A having multiple (specifically two) partners. But only in the latter two cases does Person A have concurrent partners. Sometimes researchers distinguish between these two forms of concurrency by referring to them as “transitional concurrency” and “embedded concurrency”.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="ConcurrencyTutorialFiles/concurrency.png" class="img-fluid figure-img" width="500"></p>
-<figcaption>Timeline diagrams contrasting sequential and concurrent partnerships</figcaption>
-</figure>
-</div>
-<p>Having multiple sexual partners will typically increase the potential for a person to acquire or transmit an STI, when compared to the same person having just one partner. This is true regardless of whether those multiple partners are sequential or concurrent. But <strong>the importance of concurrent partnerships is that they greatly increase the potential for an STI to spread, above and beyond multiple partnerships that are sequential</strong>. As we progress through the exercises on this website, we will explore how and why this is, and what the implications are.</p>
-</section>
-<section id="how-concurrency-works-and-does-not" class="level2">
-<h2 class="anchored" data-anchor-id="how-concurrency-works-and-does-not">How concurrency works (and does not)</h2>
-<p>Probably the most important—and most misunderstood—aspect of concurrency is the question of who it puts at risk. Most people are used to thinking about risk of disease for individuals, due to factors about that individual. For example, we often think about how someone having a particular gene or eating a particular diet will increase that person’s risk of developing diabetes. For infectious diseases, we do the same: does attending day care affect a child’s risk of acquiring the flu? Does consuming alcohol before sex affect one’s risk of acquiring an STI?</p>
-<p>The tricky thing about concurrency is that it doesn’t work the way we are used to thinking. For instance, if a man has two partners concurrently, then he will have the exact same risk of acquiring an STI as if he had had those same two partners sequentially, all else being equal. But he will have a higher chance of passing the infection on to one of his partners. Thus, the person put at risk by concurrency is not the person with the concurrent partners, but his or her partners. The exercises that follow will demonstrate how and why concurrency works this way, and what the implications are.</p>
-<p>One important thing we can already see is that this feature of concurrency thus makes it very difficult to actually detect concurrency at work in spreading STIs. Most disease studies look at individual factors (behaviors, genes, etc.) as predictors of individual risk, for at least two reasons: (1) this matches how we are used to thinking about risk (see above); and (2) this is a relatively familiar and feasible way of designing a study of disease.</p>
-<p><strong>However, if one collects data on the number and timing of people’s sexual relationships, and then compares those with concurrent partners to those without concurrent partners (controlling for cumulative number of partners over time), one will probably not find that those with concurrent partners are more likely to have or to acquire HIV or any another STI. But, this does not mean that concurrency is not increasing the spread of STIs; instead, it simply means that one is looking for the effect in the wrong person.</strong></p>
-<p>The exercises on this website explain why this is so.</p>
-</section>
-<section id="what-this-tutorial-is-and-is-not" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-tutorial-is-and-is-not">What this tutorial is (and is not)</h2>
-<p>The body of literature on concurrency is large, and our goal is not to summarize all of it (although we do provide links to some of it in the <a href="./resources.html">More Resources</a> section). That literature has two major research paradigms within it:</p>
-<ul>
-<li><p>using mathematical models to demonstrate the potential impact of concurrency</p></li>
-<li><p>analyzing data to show that two or more populations that differ in prevalence or patterns of STIs also have corresponding differences in prevalence or patterns of concurrency</p></li>
-</ul>
-<p>Some papers do both of these things together. The methods to support each of these paradigms have developed over the years, starting off fairly simple and becoming more complex. This tutorial <em>does not</em> address the data side of the research at all. And it <em>does not</em> aim to reproduce all of the complexity of all of the concurrency models that have been built.</p>
-<p>What this tutorial <em>does do</em> is to explore the basic logic of concurrency to help readers who are not familiar with the modeling work to gain some intuition about concurrency and its impacts. In order to make models realistic, they must become complex; and once they become complex, it is difficult for most people to understand them and follow their logic. So this tutorial takes a different approach: make things simple, in order to provide an accessible introduction to how concurrency works and what its potential effects are. Aided by the resulting insights, those who are interested can then explore the literature further.</p>
-<p>By the end, then, readers should:</p>
-<ul>
-<li>be able to highlight the mechanisms by which concurrency does (and does not) work</li>
-<li>explain how concurrency can impact epidemic dynamics</li>
-<li>be able to read the concurrency literature more critically, and to assess whether study designs and analysis methods are appropriate for detecting concurrency effects.</li>
-</ul>
-</section>
-<section id="the-four-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="the-four-exercises">The four exercises</h2>
-<p>The exercises build in two directions at once: from the <strong>local</strong> level (a few people) to the <strong>population</strong> level (a whole network), and from <strong>conceptual</strong> reasoning to <strong>numerical</strong> calculation. Work through them in order, or jump to the track that interests you.</p>
-<div class="roadmap-grid">
-<div class="roadmap-card">
-<p><a href="./ex1-local-conceptual.html"><strong>Exercise 1: The local level, conceptually</strong></a></p>
-<p>Sequential Sam and concurrent Chris, matched on everything but timing, reveal why concurrency shifts risk onto a person’s partners rather than the person themselves.</p>
-</div>
-<div class="roadmap-card">
-<p><a href="./ex2-pop-conceptual.html"><strong>Exercise 2: The population level, conceptually</strong></a></p>
-<p>A 24-person network shows how much farther an infection can travel when partnerships overlap instead of following one another.</p>
-</div>
-<div class="roadmap-card">
-<p><a href="./ex3-local-numerical.html"><strong>Exercise 3: The local level, numerically</strong></a></p>
-<p>The same Sam and Chris comparison, worked out with explicit per-act transmission probabilities and full derivations.</p>
-</div>
-<div class="roadmap-card">
-<p><a href="./ex4-pop-numerical.html"><strong>Exercise 4: The population level, numerically</strong></a></p>
-<p>A full dynamic-network HIV microsimulation you can run and modify, with a companion <a href="https://epimodel.github.io/concurrency.sim">interactive app</a>.</p>
-</div>
-</div>
-<p>If you would like a refresher before the numerical exercises, see the <a href="./prob-tutorial.html">rules of probability</a> and the <a href="./r-tutorial.html">introduction to R</a> in the Background section.</p>
-</section>
-<section id="authors-and-license" class="level2">
-<h2 class="anchored" data-anchor-id="authors-and-license">Authors and license</h2>
-<p>This tutorial was authored by <a href="http://faculty.washington.edu/goodreau/">Steven M. Goodreau</a> (University of Washington), <a href="http://samueljenness.org/">Samuel M. Jenness</a> (Emory University), and <a href="http://faculty.washington.edu/morrism">Martina Morris</a> (University of Washington). It is part of the <a href="https://www.epimodel.org/">EpiModel</a> ecosystem.</p>
-<p>All material is covered by a <a href="https://github.com/EpiModel/ConcurrencyTutorial?tab=GPL-3.0-1-ov-file">GPL-3.0 license</a>. Code can be found in the associated <a href="https://github.com/EpiModel/ConcurrencyTutorial">GitHub repository</a>.</p>
+<p>On this website, we explored four ways of thinking about concurrency: at the local level and at the population level, using conceptual tools and computational tools. Overall, we saw a few themes appear repeatedly:</p>
+<ol type="1">
+<li><p>Concurrency does not increase the risk of an individual who practices it, relative to having two consecutive partners.</p></li>
+<li><p>However, concurrency can increase the risk to that person’s partners.</p></li>
+<li><p>Concurrency increases transmission in two ways: by creating more possible transmission paths, and by speeding up potential transmission on existing paths.</p></li>
+<li><p>High acute infectivity can amplify these impacts.</p></li>
+<li><p>The population-level effects of concurrent partnerships can be enormous.</p></li>
+</ol>
+<p>We also saw a variety of ways that the simple models we looked at could be made more complex and more realistic. Many of these have been explored in the literature. And readers may have some ideas of new questions that have not been explored. The beauty of modeling is that it allows many of these questions to be posed and explored and refined in a shared framework. And just as important as having good modelers is having good consumers of models—researchers and policy makers who can read models and understand the assumptions they are making, so that they can do the best job in deciding which they consider to be most realistic.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -752,10 +663,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./ex4-pop-numerical.html" class="pagination-link" aria-label="4. Population, numerical">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">4. Population, numerical</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ex1-local-conceptual.html" class="pagination-link" aria-label="1. Local, conceptual">
-        <span class="nav-page-text">1. Local, conceptual</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./prob-tutorial.html" class="pagination-link" aria-label="Rules of probability">
+        <span class="nav-page-text">Rules of probability</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 3: The local level, numerically – Concurrency Tutorial</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ex4-pop-numerical.html" rel="next">
+<link href="./ex2-pop-conceptual.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-df8a5dc4faa71e219bc521d2954a8932.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Concurrency Tutorial</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.epimodel.org"> 
+<span class="menu-text">EpiModel</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://epimodel.github.io/concurrency.sim"> 
+<span class="menu-text">Interactive app</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EpiModel/ConcurrencyTutorial"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ex1-local-conceptual.html">Exercises</a></li><li class="breadcrumb-item"><a href="./ex3-local-numerical.html">3. Local, numerical</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Exercises</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex1-local-conceptual.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Local, conceptual</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex2-pop-conceptual.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Population, conceptual</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex3-local-numerical.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">3. Local, numerical</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ex4-pop-numerical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Population, numerical</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Summary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Background</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rules of probability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction to R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">More resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#questions-answers" id="toc-questions-answers" class="nav-link" data-scroll-target="#questions-answers">Questions &amp; Answers</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ex1-local-conceptual.html">Exercises</a></li><li class="breadcrumb-item"><a href="./ex3-local-numerical.html">3. Local, numerical</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Exercise 3: The local level, numerically</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We shall now revisit Sequential Sam and Concurrent Chris. This time, we will assume that the probability of transmission from a single act of sex between an infected and an uninfected person is 1%. There is no acute infection, nor any cure. Thus, in this exercise, we are not considering the impact of concurrency via the “acute infectivity” effect, only through other mechanisms.</p>
+<p>For those readers who would like a refresher on the relevant rules of probability, visit our <a href="./r-tutorial.html">Probability Tutorial</a>.</p>
+</section>
+<section id="questions-answers" class="level2">
+<h2 class="anchored" data-anchor-id="questions-answers">Questions &amp; Answers</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Questions</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Hints</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Further Hints</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Answers</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Derivations</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">R code for calculating transmission probabilities</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Let us imagine that Sam has sex 200 times: first 100 times with the red partner, and then 100 times with the blue partner. This can be depicted as:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/samcoital.png" class="img-fluid figure-img" width="800"></p>
+<figcaption>Diagram of Sam having 100 sex acts with the red partner and then 100 with the blue partner</figcaption>
+</figure>
+</div>
+<p><strong>Question 1</strong>: If the red partner is infected and the blue is not, what is the probability that Sam gets infected from the red partner?</p>
+<p><strong>Question 2</strong>: If the blue partner is infected and the red is not, what is the probability that Sam gets infected from the blue partner?</p>
+<p><strong>Question 3</strong>: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Sam’s probability of becoming infected?</p>
+<p><strong>Question 4</strong>: If the red partner is infected and the blue is not, what is the probability that Sam gets infected AND transmits to the blue partner?</p>
+<p><strong>Question 5</strong>: If the blue partner is infected and the red is not, what is the probability that Sam gets infected AND transmits to the red partner?</p>
+<p><strong>Question 6</strong>: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is the probability that Sam both becomes infected and transmits to an uninfected partner?</p>
+<p>Now let us imagine that Chris has sex 200 times: once with the red partner, then once with the blue partner, then once with red, then blue, and back and forth 100 times for a total of 200 sex acts.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ConcurrencyTutorialFiles/chriscoital.png" class="img-fluid figure-img" width="800"></p>
+<figcaption>Diagram of Chris alternating sex acts between the red and blue partners</figcaption>
+</figure>
+</div>
+<p><strong>Question 7</strong>: If the red partner is infected and the blue is not, what is the probability that Chris gets infected from the red partner?</p>
+<p><strong>Question 8</strong>: If the blue partner is infected and the red is not, what is the probability that Chris gets infected from the blue partner?</p>
+<p><strong>Question 9</strong>: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Chris’s probability of becoming infected?</p>
+<p><strong>Question 10</strong>: If the red partner is infected and the blue is not, what is the probability that Chris gets infected AND transmits to the blue partner? (This one is hard—if you need a hint, click the Hint tab.)</p>
+<p><strong>Question 11</strong>: If the blue partner is infected and the red is not, what is the probability that Chris gets infected AND transmits to the red partner? (This one is hard—if you need a hint, click the Hint tab.)</p>
+<p><strong>Question 12</strong>: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is the probability that Chris both becomes infected and transmits to an uninfected partner?</p>
+<p>Now let’s compare Sam and Chris.</p>
+<p><strong>Question 13</strong>: What is the difference between Sam’s chance of becoming infected and Chris’s chance of becoming infected?</p>
+<p><strong>Question 14</strong>: What is the difference between Sam’s chance of transmitting and Chris’s chance of transmitting?</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Need help on either of these two questions?</p>
+<p><strong>Question 10</strong>: If the red partner is infected and the blue is not, what is the probability that Chris gets infected AND transmits to the blue partner?</p>
+<p><strong>Question 11</strong>: If the blue partner is infected and the red is not, what is the probability that Chris gets infected AND transmits to the red partner?</p>
+<p>Our first piece of guidance is to work through the <em>Probability Tutorial</em> (see link on left), if you have not already. The example at the bottom of that page provides some hints as to how to proceed with the above.</p>
+<p>Then, with that tutorial in mind, consider the following steps in order.</p>
+<ul>
+<li><p>What set of conditional probabilities does one need to calculate in order to get the final answer?</p></li>
+<li><p>As examples, try calculating a few of these conditional probabilities. Say, the 1st, 2nd, and 37th.</p></li>
+<li><p>Now, develop a general expression for the nth of these conditional probabilities.</p></li>
+<li><p>Now, given the rules of probability, and the relationship among the probabilities you have just calculated, how does one combine them together to get the joint probability?</p></li>
+</ul>
+<p>If you would like some more hints, see the next tab!</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><strong>For Question 10:</strong> There are 100 mutually exclusive ways that Chris can get infected by red and pass it on to blue:</p>
+<ol type="1">
+<li><p>Chris is infected on the first sex act with red, and then subsequently passes to blue;</p></li>
+<li><p>Chris is infected on the second sex act with red, and then subsequently passes to blue;</p></li>
+<li><p>Chris is infected on the third sex act with red, and then subsequently passes to blue; etc.</p></li>
+</ol>
+<p>Try the following:</p>
+<ul>
+<li>Calculate the probability for the first of these (Chris is infected on the first sex act with red, and then subsequently passes to blue). Note that this probability can be broken down further into two pieces:</li>
+</ul>
+<p><em>P(Chris is infected on the first sex act with red) * P(Chris infects blue | Chris is infected on the first sex act with red)</em></p>
+<ul>
+<li>Calculate the probability for the second of these (Chris is infected on the second sex act with red, and then subsequently passes to blue). Note that this probability can be broken down further into two pieces:</li>
+</ul>
+<p><em>P(Chris is infected on the second sex act with red) * P(Chris infects blue | Chris is infected on the second sex act with red)</em></p>
+<ul>
+<li>Since Chris must avoid infection on the first sex act with red in order to become infected on the second sex act with red, this can be further broken down into:</li>
+</ul>
+<p><em>P(Chris is infected on the second sex act with red | Chris avoided infection on the first sex act with red) * P(Chris avoids infection on the first sex act with red) P(infects blue | Chris is infected on the second sex act with red)</em></p>
+<ul>
+<li><p>Calculate the probability for the 37th of these (Chris is infected on the 37th sex act with red, and then subsequently passes to blue).</p></li>
+<li><p>Looking at these three expressions, try developing an expression for the probability that Chris is infected on the nth sex act with red, and then subsequently passes to blue</p></li>
+<li><p>Use a software package with which you are familiar (Excel, R, etc.) to calculate all 100 values</p></li>
+<li><p>Since the events are mutually exclusive, use the basic rules of probability to determine the probability that any one of these 100 events can happen.</p></li>
+</ul>
+<p>The structure of the solution for Question 11 is exactly the same, although the resulting expression differs slightly.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>On this page, we provide the numerical answers only. For those readers who wish to see derivations of them, see the Derivations tab. Or for those readers who had some incorrect answers and want to try again, check out the <a href="./r-tutorial.html">Probability Tutorial</a>.</p>
+<p><strong>The probability of transmission from a single act of sex between an infected and an uninfected person is 1%.</strong></p>
+<p><strong>Let us imagine that Sam has sex 200 times: 100 times with the red partner, and then 100 times with the blue partner.</strong></p>
+<p><strong>Question 1</strong>: If the red partner is infected and the blue is not, what is the probability that Sam gets infected from the red partner? <strong>63.4%</strong></p>
+<p><strong>Question 2</strong>: If the blue partner is infected and the red is not, what is the probability that Sam gets infected from the blue partner? <strong>63.4%</strong></p>
+<p><strong>Question 3</strong>: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Sam’s probability of becoming infected? <strong>63.4%</strong></p>
+<p><strong>Question 4</strong>: If the red partner is infected and the blue is not, what is the probability that Sam will get infected AND pass the infection on to the blue partner? <strong>40.2%</strong></p>
+<p><strong>Question 5</strong>: If the blue partner is infected and the red is not, what is the probability that Sam will get infected AND pass the infection on to the red partner? <strong>0%</strong></p>
+<p><strong>Question 6</strong>: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Sam’s overall joint probability of becoming infected and transmitting? <strong>20.1%</strong></p>
+<p><br></p>
+<p><strong>Now let us imagine that Chris has sex 200 times: once with the red partner, then once with the blue partner, then once with red, then blue, and back and forth 100 times for a total of 200 sex acts.</strong></p>
+<p><strong>Question 7</strong>: If the red partner is infected and the blue is not, what is the probability that Chris gets infected from the red partner? <strong>63.4%</strong></p>
+<p><strong>Question 8</strong>: If the blue partner is infected and the red is not, what is the probability that Chris gets infected from the blue partner? <strong>63.4%</strong></p>
+<p>Same logic as Question 2.</p>
+<p><strong>Question 9</strong>: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Chris overall probability of becoming infected? <strong>63.4%</strong></p>
+<p><strong>Question 10</strong>: If the red partner is infected and the blue is not, what is the probability that Chris will get infected AND pass the infection on to the blue partner? <strong>26.8%</strong></p>
+<p><strong>Question 11</strong>: If the blue partner is infected and the red is not, what is the probability that Chris will get infected AND pass the infection on to the red partner? (This one is hard—do your best!) <strong>26.4%</strong></p>
+<p><strong>Question 12</strong>: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Chris overall joint probability of becoming infected and transmitting? <strong>26.6%</strong></p>
+<p><br> <strong>Now let’s compare Sam and Chris.</strong></p>
+<p><strong>Question 13</strong>: What is the difference between Sam’s chance of becoming infected and Chris’s chance of becoming infected? <strong>Nothing</strong> – Sam and Chris have the exact same chance of becoming infected.</p>
+<p>A comparison of the answers to Questions 3 and 9.</p>
+<p><strong>Question 14</strong>: What is the difference between Sam’s chance of transmitting and Chris’s chance of transmitting? <strong>Chris’s probability of transmitting is 1.3 times that of Sam’s (26.6% vs.&nbsp;20.1%).</strong></p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p><strong>The probability of transmission from a single act of sex between an infected and an uninfected person is 1%.</strong></p>
+<p><strong>Let us imagine that Sam has sex 200 times: 100 times with the red partner, and then 100 times with the blue partner.</strong></p>
+<p><strong>Question 1</strong>: If the red partner is infected and the blue is not, what is the probability that Sam gets infected from the red partner? <strong>63.4%</strong></p>
+<p>The probability that Sam will avoid infection at each sex act is 1- 0.01 = 0.99. The probability that Sam will avoid it through 100 consecutive sex acts is 0.99 x 0.99 x 0.99…. = 0.99<sup>100</sup>. The probability that Sam will become infected during any of 100 consecutive sex acts is 1 – probably of avoiding infection = 1 -0.99<sup>100</sup> = 0.634.</p>
+<p>If this logic is unfamiliar, please see the <a href="./prob-tutorial.html">Probability Tutorial</a>, where we lay it out in more detail.</p>
+<p><strong>Question 2</strong>: If the blue partner is infected and the red is not, what is the probability that Sam gets infected from the blue partner? <strong>63.4%</strong></p>
+<p>The calculations here are the same as for Question 1. Sam has the same number of contacts with red as with blue, and the same probability of transmission per act in each case.</p>
+<p><strong>Question 3</strong>: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Sam’s probability of becoming infected? <strong>63.4%</strong></p>
+<p>There are two equally likely, mutually exclusive, possibilities: red is infected, or blue is infected. Given our stated assumptions, one must be true, so their probabilities sum to 1. If they are equally likely and their probabilities sum to 1, they must each have a probability of ½.</p>
+<p>There are two mutually exclusive ways that Sam can become infected: by red, or by blue. His total probability of becoming infected is:</p>
+<p><em>P(Sam is infected by red) + P(Sam is infected by blue)</em></p>
+<p>In order to be infected by someone, it is necessary for them to be infected. So, in each case, those probabilities can be broken down further:</p>
+<div class="line-block">&nbsp;&nbsp;&nbsp;= <em>P(red is infected)<em>P(Sam is infected by red | red is infected) + P(blue is infected)</em>P(Sam is infected by blue | blue is infected)</em></div>
+<div class="line-block">&nbsp;&nbsp;&nbsp;= (0.5)(0.634) + (0.5)(0.634) = 0.634.</div>
+<div class="line-block"></div>
+<p><strong>Question 4</strong>: If the red partner is infected and the blue is not, what is the probability that Sam will get infected AND pass the infection on to the blue partner? <strong>40.2%</strong></p>
+<p>We want <em>P(Sam is infected by red and Sam infects blue | red is infected)</em></p>
+<p>We can break this down into:</p>
+<p>_P(Sam is infected by red | red is infected)*P(Sam infects blue | Sam is infected by red and red is infected)_</p>
+<p>We already know that the first of these is 0.634. For the second, the calculations are the same as in Question 1 (what is the probability that x infects y during 100 sex acts, given x is infected and y is not).</p>
+<div class="line-block">&nbsp;&nbsp;&nbsp;&nbsp;= (0.634)(0.634) = 0.402</div>
+<div class="line-block"></div>
+<p><strong>Question 5</strong>: If the blue partner is infected and the red is not, what is the probability that Sam will get infected AND pass the infection on to the red partner? <strong>0%</strong></p>
+<p>Sam’s sex acts with red all preceded the first sex act with red, so there are no acts during which Sam can transmit an infection acquired for red to blue.</p>
+<p><strong>Question 6</strong>: If we assume that exactly one of Sam’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Sam’s overall joint probability of becoming infected and transmitting? <strong>20.1%</strong></p>
+<p>Following the same structure as in Question 3, we have 0.5(0.402) + 0.5(0) = 0.201.</p>
+<p><br></p>
+<p><strong>Now let us imagine that Chris has sex 200 times: once with the red partner, then once with the blue partner, then once with red, then blue, and back and forth 100 times for a total of 200 sex acts.</strong></p>
+<p><strong>Question 7</strong>: If the red partner is infected and the blue is not, what is the probability that Chris gets infected from the red partner? <strong>63.4%</strong></p>
+<p>Same logic as Question 1.</p>
+<p><strong>Question 8</strong>: If the blue partner is infected and the red is not, what is the probability that Chris gets infected from the blue partner? <strong>63.4%</strong></p>
+<p>Same logic as Question 2.</p>
+<p><strong>Question 9</strong>: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Chris overall probability of becoming infected? <strong>63.4%</strong></p>
+<p>Same logic as Question 3.</p>
+<p><strong>Question 10</strong>: If the red partner is infected and the blue is not, what is the probability that Chris will get infected AND pass the infection on to the blue partner? <strong>26.8%</strong></p>
+<p>There are 100 mutually exclusive ways that Chris can get infected by red and pass it on to blue: (1) Chris is infected on the first sex act with red, and then subsequently passes to blue; (2) Chris is infected on the second sex act with red, and then subsequently passes to blue; (3) Chris is infected on the third sex act with red, and then subsequently passes to blue; etc. Since these are mutually exclusive, we can calculate the probability of each, and then add them all together.</p>
+<p>The probability of (1) is: P(Chris is infected on the first sex act with red) * P(infects blue | Chris is infected on the first sex act with red) = (0.01) * [1-(0.99)<sup>100</sup>] = 0.0634. This is because, if Chris is infected during the first sex act with red, there are still 100 acts with blue during which transmission to blue may occur.</p>
+<p>The probability of (2) is: P(Chris is infected on the second sex act with red) * P(infects blue | Chris is infected on the second sex act with red). In order to become infected on the second sex act with red, Chris must avoid infection on the first act, and then become infected on the second. Then, once that happens, there are only 99 acts with blue remaining in which to transmit. So we have (0.99) * (0.01) * [1-(0.99)<sup>99</sup>] = 0.0624.</p>
+<p>If one repeats this, the general expression that emerges for the probability of Chris being infected on the n<sup>th</sup> sex act with red and subsequently transmitting to blue is:</p>
+<p>(0.99)<sup>(n-1)</sup> * (0.01) * [1-(0.99)<sup>100-(n-1)</sup>]</p>
+<p>The total probability is the sum of this quantity for each value of n from 1 to 100.</p>
+<p>One can calculate each of these 100 values by hand and then add them, or use software to automate it. Below, we include a small set of R code that performs this calculation (and all the others on this page).</p>
+<p>Once all 100 numbers are calculated and summed, the result is: 0.268.</p>
+<p><strong>Question 11</strong>: If the blue partner is infected and the red is not, what is the probability that Chris will get infected AND pass the infection on to the red partner? (This one is hard—do your best!) <strong>26.4%</strong></p>
+<p>Here the logic is almost the same as in Question 10; there are 100 time points at which Chris may be infected by blue; however, because the sex acts with blue start later, there is one fewer acts for transmission onward to red in each of the hundred cases. That is:</p>
+<p>The probability of (1) is: P(Chris is infected on the first sex act with blue) * P(infects red| Chris is infected on the first sex act with blue) = (0.01) * 1-(0.99)<sup>99</sup> = 0.0630</p>
+<p>The probability of (2) is: P(Chris is infected on the second sex act with blue) * P(infects red | Chris is infected on the second sex act with blue).= (0.99) * (0.01) * 1-(0.99)<sup>98</sup> = 0.0620.</p>
+<p>The general expression for the probability of Chris being infected on the n<sup>th</sup> sex act with blue and subsequently transmitting to red is:</p>
+<p>(0.99)<sup>(n-1)</sup> * (0.01) * [1-(0.99)<sup>100-n</sup>]</p>
+<p>Notice the only difference from Question 10 is the final exponent.</p>
+<p>These hundred versions of this expression add to 0.264.</p>
+<p><strong>Question 12</strong>: If we assume that exactly one of Chris’s partners is infected, and it is equally likely to be the red partner or the blue partner, what is Chris overall joint probability of becoming infected and transmitting? <strong>26.6%</strong></p>
+<p>Following the same structure as in Questions 3 and 6, we have 0.5(0.268) + 0.5(0.264) = 0.266</p>
+<p><br></p>
+<p><strong>Now let’s compare Sam and Chris.</strong></p>
+<p><strong>Question 13</strong>: What is the difference between Sam’s chance of becoming infected and Chris’s chance of becoming infected? <strong>Nothing</strong> – Sam and Chris have the exact same chance of becoming infected.</p>
+<p>A comparison of the answers to Questions 3 and 9.</p>
+<p><strong>Question 14</strong>: What is the difference between Sam’s chance of transmitting and Chris’s chance of transmitting? <strong>Chris’s probability of transmitting is 1.3 times that of Sam’s (26.6% vs.&nbsp;20.1%).</strong></p>
+<p>A comparison of the answers to Questions 6 and 12.</p>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p><span id="transmissioncalc">For Sam (sequential relationships), Chris (concurrent relationships), and the ratio of the two:</span></p>
+<p>This code involves three functions: one to calculate Sam’s risk of transmitting; one for Chris’s risk of transmitting; and one to calculate the ratio. Each function takes two arguments: the per-act probability of transmission (called beta), and the number of sex acts had with each of the two partners (called c). There is no function to calculate Sam’s and Chris’s probability of acquisition, because these are always the same as each other. If you are not familiar with R, and wish to use these functions, you can turn to our <a href="./r-tutorial.html">R tutorial</a></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sam <span class="ot">&lt;-</span> <span class="cf">function</span>(beta,c) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    red.to.sam.to.blue <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>(<span class="dv">1</span><span class="sc">-</span>beta)<span class="sc">^</span>c)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    blue.to.sam.to.red <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> red.to.sam.to.blue<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> blue.to.sam.to.red<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>chris <span class="ot">&lt;-</span> <span class="cf">function</span>(beta,c) {</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    index <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>c</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    red.to.chris.to.blue <span class="ot">&lt;-</span> <span class="fu">sum</span>( (<span class="dv">1</span><span class="sc">-</span>beta)<span class="sc">^</span>(index<span class="dv">-1</span>) <span class="sc">*</span> beta <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>(<span class="dv">1</span><span class="sc">-</span>beta)<span class="sc">^</span>(c<span class="sc">-</span>index<span class="sc">+</span><span class="dv">1</span>)) )</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    blue.to.chris.to.red <span class="ot">&lt;-</span> <span class="fu">sum</span>( (<span class="dv">1</span><span class="sc">-</span>beta)<span class="sc">^</span>(index<span class="dv">-1</span>) <span class="sc">*</span> beta <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>(<span class="dv">1</span><span class="sc">-</span>beta)<span class="sc">^</span>(c<span class="sc">-</span>index)) )</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> red.to.chris.to.blue<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> blue.to.chris.to.red<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>conc.ratio <span class="ot">&lt;-</span> <span class="cf">function</span>(beta,c) {</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">chris</span>(beta,c) <span class="sc">/</span> <span class="fu">sam</span>(beta,c)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>As in the conceptual version of this scenario, <a href="./ex1-local-conceptual.html">Exercise 1</a>, <a href="./ex3-local-numerical.html">Exercise 3</a> demonstrates the basic properties of concurrency at the local level. Sam had two sequential partners and Chris had two concurrent partners. Sam and Chris had the exact same probability of getting infected. But Chris’s uninfected partner had a probability of getting infected that was 32% larger than Sam’s uninfected partner did.<br>
+Let us think about how our numbers relate to the various components of concurrency’s effect that we explored in the Discussion of <a href="./ex1-local-conceptual.html">Exercise 1</a>. We first focus on two of these:</p>
+<ul>
+<li><p><strong>“backwards transmission”</strong> : Indeed, Chris has created a potential transmission path that is missing from Sam’s case: becoming infected by blue and then transmitting to red. The probability of this happening was 26.4% for Chris; for Sam, it was 0%, of course.</p></li>
+<li><p><strong>“missed forwards transmission”</strong>. Somewhat offsetting this is the reduction for Chris in the probability of acquiring from red and transmitting to blue. For Chris, this probability was 26.8%, compared to 40.2% for Sam.</p></li>
+</ul>
+<p>As we foreshadowed in <a href="./ex1-local-conceptual.html">Exercise 1</a>, however, the combined effect of these two phenomena favors transmission by Chris (the mean of 26.4% and 26.8%, which equals 26.6%), compared to Sam (the mean of 0% and 40.2%, which equals 20.1%). Using the code we provided, or one’s own, we can see that this is always the case: for our model system, the combined effects of backwards transmission and missed forwarded infection always favor transmission by the person with concurrent partners.</p>
+<p>The third feature affecting transmission probabilities is the <strong>“acute infectivity”</strong> effect. This did not play a role in this example, because we assumed that transmission probabilities remain constant over the course of infection. We will, however, include this in <a href="./ex4-pop-numerical.html">Exercise 4</a>.</p>
+<p>Finally, since we were only focused on transmission probabilities, we did not explore the issue of the expected time until transmission (given that transmission happens). This is the <strong>“path acceleration”</strong> effect that we also mentioned in <a href="./ex1-local-conceptual.html">Exercise 1</a>. Path acceleration is indeed present here; that is, the expected time between becoming infected and then transmitting is shorter for Chris than for Sam. The mathematics behind this are quite complicated, however, and we do not show them. We encourage interested readers to try deriving this result for themselves as an exercise. In <a href="./ex4-pop-numerical.html">Exercise 4</a>, we will explore the collective population-level effects of concurrency, which brings together all of the various phenomena, including path acceleration.</p>
+<p>One important phenomenon that relates to concurrency is coital dilution—the possibility that people in multiple relationships have fewer coital acts with one or more of their partners per unit time than they would if they were only in one relationship. Notice that in <a href="./ex3-local-numerical.html">Exercise 3</a>, we did not specify the time frame for either set of relationships. We would get the same result regardless of whether we consider Chris’s relationships to be the same length as Sam’s and have no coital dilution; or to be twice as long as Sam’s and have major coital dilution; or somewhere in between. In the first case, Chris would spend half the time having twice as many coital acts as Sam, and have none at all the other half. In the second case, Chris would be having as many coital acts as Sam all the time, but would be having half as many per time period within each relationship.</p>
+<p>Some readers may be wondering: how are our findings in this exercise affected by different parameters? What if the per-contact risk of transmission is higher or lower? What if the number of sex acts in each relationship is higher or lower? We can re-calculate the numbers by hand for any pair of values, if we wish. Or, those readers who are familiar with R can use the <a href="#transmissioncalc">code from above</a>, combined with an additional piece of code below that calculates the transmission ratio for Chris to Sam, for many different values of beta and c, and then plots them.</p>
+<p>Whether you calculate the values by hand, write your own functions, or use our R functions, you will notice a clear pattern. Chris’s probability of transmitting is always at least as large as Sam’s, and may go up to being twice as large. (If you use the code above, note that the large area in the upper-right of the figure is where Chris is twice as likely as Sam to transmit to an uninfected partner). The larger the number of sex acts, the closer Chris gets to transmitting with twice the probability of Sam. The higher the per-act transmission probability is, the faster they diverge as well. This is because as the two numbers (number of acts, per-act transmission) rise, Chris’s probability of transmitting reaches 100%, but Sam’s can only get as high as 50% given the impossibility of Sam transmitting to red.</p>
+<p>There are two important things to note about this finding that a person with concurrent partners can be up to twice as likely to transmit as one with sequential partners:</p>
+<ul>
+<li><p>This observation is limited to a single non-infected partner. We are not considering the possibility that Chris and Sam may each have many partners. We are also not considering the “down-stream” effects, wherein their partners may or may not transmit to others. Said another way, this maximum ratio of 2:1 transmission probabilities to a single non-infected partner does not imply anything about a limit on the population-level differences in epidemic potential between concurrency and sequential monogamy. We will explore the latter issue in the next exercise.</p></li>
+<li><p>Although Chris’s probability of transmitting to the one uninfected partner could never get more than twice as large as Sam’s in our example, the same need not be true in the real world. We made the simplifying assumption that transmission probabilities are constant. If, in fact, they are much higher right after infection (as for HIV), then Chris’s transmission probability might get much larger than Sam’s, given how often Chris has sex with both blue and red in quick succession while Sam does not. We could try to introduce variable infectivity into our basic calculations here, although it turns out to get very complicated quickly.</p></li>
+</ul>
+<p>Instead, we will turn to our final exercise, which allows us to explore the population-level impacts of concurrency. In that setting, we will be able to model variable infectivity over time, as well as different assumptions about relational counts and durations.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Key takeaway">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Key takeaway
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sam and Chris were equally likely to become infected, but Chris’s uninfected partner faced a transmission probability about 1.3 times higher (26.6% versus 20.1%). Backwards transmission outweighs reduced forward transmission, so the person with concurrent partners is always the more dangerous transmitter.</p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/EpiModel\.github\.io\/ConcurrencyTutorial\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ex2-pop-conceptual.html" class="pagination-link" aria-label="2. Population, conceptual">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2. Population, conceptual</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ex4-pop-numerical.html" class="pagination-link" aria-label="4. Population, numerical">
+        <span class="nav-page-text">4. Population, numerical</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ © 2025 EpiModel Research Lab, Emory University
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://epimodel.github.io/concurrency.sim" target="_blank">
+<p>Interactive app</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.epimodel.org" target="_blank">
+<p>EpiModel</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EpiModel/ConcurrencyTutorial" target="_blank">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

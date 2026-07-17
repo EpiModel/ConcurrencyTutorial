@@ -6,12 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Steven M. Goodreau">
-<meta name="author" content="Samuel M. Jenness">
-<meta name="author" content="Martina Morris">
-<meta name="dcterms.date" content="2026-07-17">
 
-<title>Concurrency Tutorial</title>
+<title>An introduction to R – Concurrency Tutorial</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -27,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -36,7 +67,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ex1-local-conceptual.html" rel="next">
+<link href="./resources.html" rel="next">
+<link href="./prob-tutorial.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob-tutorial.html">Background</a></li><li class="breadcrumb-item"><a href="./r-tutorial.html">Introduction to R</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -142,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -189,13 +221,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Background</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./prob-tutorial.html" class="sidebar-item-text sidebar-link">
@@ -204,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r-tutorial.html" class="sidebar-item-text sidebar-link">
+  <a href="./r-tutorial.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Introduction to R</span></a>
   </div>
 </li>
@@ -221,47 +253,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#what-concurrency-is-and-is-not" id="toc-what-concurrency-is-and-is-not" class="nav-link active" data-scroll-target="#what-concurrency-is-and-is-not">What concurrency is (and is not)</a></li>
-  <li><a href="#how-concurrency-works-and-does-not" id="toc-how-concurrency-works-and-does-not" class="nav-link" data-scroll-target="#how-concurrency-works-and-does-not">How concurrency works (and does not)</a></li>
-  <li><a href="#what-this-tutorial-is-and-is-not" id="toc-what-this-tutorial-is-and-is-not" class="nav-link" data-scroll-target="#what-this-tutorial-is-and-is-not">What this tutorial is (and is not)</a></li>
-  <li><a href="#the-four-exercises" id="toc-the-four-exercises" class="nav-link" data-scroll-target="#the-four-exercises">The four exercises</a></li>
-  <li><a href="#authors-and-license" id="toc-authors-and-license" class="nav-link" data-scroll-target="#authors-and-license">Authors and license</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob-tutorial.html">Background</a></li><li class="breadcrumb-item"><a href="./r-tutorial.html">Introduction to R</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Concurrency Tutorial</h1>
-<p class="subtitle lead">How relational concurrency does (and does not) shape HIV and STI epidemics</p>
+<h1 class="title">An introduction to R</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Authors</div>
-    <div class="quarto-title-meta-contents">
-             <p>Steven M. Goodreau </p>
-             <p>Samuel M. Jenness </p>
-             <p>Martina Morris </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">July 17, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -271,78 +278,113 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The concept of relational concurrency appears frequently in the literature on HIV epidemiology, and is believed by some researchers to represent a key factor in understanding large disparities in the prevalence of HIV or other sexually transmitted infections (STIs) among populations. On the one hand, the basic logic behind the hypothesis is straightforward; on the other hand, it entails some subtleties that can run counter to many people’s intuition. Thus, it can be somewhat tricky to understand, which has caused some confusion among both researchers and the general public.</p>
-<p>The aim of this website is to provide intuitive, easy-to-use tools to help researchers and the general public to understand the concept of relational concurrency and the ways in which it can affect the spread of sexually transmitted infections like HIV. The site contains some introductory overviews, followed by a series of four exercises.</p>
-<p>The four exercises focus on relational concurrency at the local level and the population level; each level is first explored through a conceptual exercise, and then by a more complex numerical exercise.</p>
-<p>The conceptual exercises do not require any special mathematical background, and are geared at providing a basic but powerful understanding of relational concurrency. Some readers may wish to explore only the conceptual exercises. The numerical exercises require some additional background. Specifically, <a href="./ex3-local-numerical.html">Exercise 3</a> requires an ability to calculate basic probabilities. <a href="./ex4-pop-numerical.html">Exercise 4</a> requires familiarity with the R programming language. We thus provide a tutorial for each of these components. Readers may wish to try the exercises first, to see if they are able to follow them; if not, they can switch over to the tutorials.</p>
-<p>Throughout the exercises, we will use the term “concurrency” as short-hand for “relational concurrency” or “sexual relationship concurrency.” One may see all of these terms in the literature; they mean the same thing.</p>
-<section id="what-concurrency-is-and-is-not" class="level2">
-<h2 class="anchored" data-anchor-id="what-concurrency-is-and-is-not">What concurrency is (and is not)</h2>
-<p><strong>Relational concurrency</strong> refers to the situation in which one individual is involved in <strong>two or more relationships that overlap in time</strong>.</p>
-<p>Concurrency is <strong>not</strong> simply a synonym for multiple partnerships. The phrase “multiple partnerships” is typically used in HIV/STI epidemiology to refer the case of people having multiple sex partners over the course of some time period—for example, a year. Within this definition, each pair of multiple partners can be sequential (one ends before the next one begins; also called serial monogamy), or they can be concurrent. In order for someone to have concurrent partnerships, they must have multiple partnerships (at least two); but the reverse is not necessarily true—one can have multiple partners without having concurrent partners.</p>
-<p>In the following examples, let the red line represent the time that person A is in a sexual relationship with person B, and the blue line represent the time that person A is in a sexual relationship with person C. All three cases represent Person A having multiple (specifically two) partners. But only in the latter two cases does Person A have concurrent partners. Sometimes researchers distinguish between these two forms of concurrency by referring to them as “transitional concurrency” and “embedded concurrency”.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="ConcurrencyTutorialFiles/concurrency.png" class="img-fluid figure-img" width="500"></p>
-<figcaption>Timeline diagrams contrasting sequential and concurrent partnerships</figcaption>
-</figure>
-</div>
-<p>Having multiple sexual partners will typically increase the potential for a person to acquire or transmit an STI, when compared to the same person having just one partner. This is true regardless of whether those multiple partners are sequential or concurrent. But <strong>the importance of concurrent partnerships is that they greatly increase the potential for an STI to spread, above and beyond multiple partnerships that are sequential</strong>. As we progress through the exercises on this website, we will explore how and why this is, and what the implications are.</p>
-</section>
-<section id="how-concurrency-works-and-does-not" class="level2">
-<h2 class="anchored" data-anchor-id="how-concurrency-works-and-does-not">How concurrency works (and does not)</h2>
-<p>Probably the most important—and most misunderstood—aspect of concurrency is the question of who it puts at risk. Most people are used to thinking about risk of disease for individuals, due to factors about that individual. For example, we often think about how someone having a particular gene or eating a particular diet will increase that person’s risk of developing diabetes. For infectious diseases, we do the same: does attending day care affect a child’s risk of acquiring the flu? Does consuming alcohol before sex affect one’s risk of acquiring an STI?</p>
-<p>The tricky thing about concurrency is that it doesn’t work the way we are used to thinking. For instance, if a man has two partners concurrently, then he will have the exact same risk of acquiring an STI as if he had had those same two partners sequentially, all else being equal. But he will have a higher chance of passing the infection on to one of his partners. Thus, the person put at risk by concurrency is not the person with the concurrent partners, but his or her partners. The exercises that follow will demonstrate how and why concurrency works this way, and what the implications are.</p>
-<p>One important thing we can already see is that this feature of concurrency thus makes it very difficult to actually detect concurrency at work in spreading STIs. Most disease studies look at individual factors (behaviors, genes, etc.) as predictors of individual risk, for at least two reasons: (1) this matches how we are used to thinking about risk (see above); and (2) this is a relatively familiar and feasible way of designing a study of disease.</p>
-<p><strong>However, if one collects data on the number and timing of people’s sexual relationships, and then compares those with concurrent partners to those without concurrent partners (controlling for cumulative number of partners over time), one will probably not find that those with concurrent partners are more likely to have or to acquire HIV or any another STI. But, this does not mean that concurrency is not increasing the spread of STIs; instead, it simply means that one is looking for the effect in the wrong person.</strong></p>
-<p>The exercises on this website explain why this is so.</p>
-</section>
-<section id="what-this-tutorial-is-and-is-not" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-tutorial-is-and-is-not">What this tutorial is (and is not)</h2>
-<p>The body of literature on concurrency is large, and our goal is not to summarize all of it (although we do provide links to some of it in the <a href="./resources.html">More Resources</a> section). That literature has two major research paradigms within it:</p>
-<ul>
-<li><p>using mathematical models to demonstrate the potential impact of concurrency</p></li>
-<li><p>analyzing data to show that two or more populations that differ in prevalence or patterns of STIs also have corresponding differences in prevalence or patterns of concurrency</p></li>
-</ul>
-<p>Some papers do both of these things together. The methods to support each of these paradigms have developed over the years, starting off fairly simple and becoming more complex. This tutorial <em>does not</em> address the data side of the research at all. And it <em>does not</em> aim to reproduce all of the complexity of all of the concurrency models that have been built.</p>
-<p>What this tutorial <em>does do</em> is to explore the basic logic of concurrency to help readers who are not familiar with the modeling work to gain some intuition about concurrency and its impacts. In order to make models realistic, they must become complex; and once they become complex, it is difficult for most people to understand them and follow their logic. So this tutorial takes a different approach: make things simple, in order to provide an accessible introduction to how concurrency works and what its potential effects are. Aided by the resulting insights, those who are interested can then explore the literature further.</p>
-<p>By the end, then, readers should:</p>
-<ul>
-<li>be able to highlight the mechanisms by which concurrency does (and does not) work</li>
-<li>explain how concurrency can impact epidemic dynamics</li>
-<li>be able to read the concurrency literature more critically, and to assess whether study designs and analysis methods are appropriate for detecting concurrency effects.</li>
-</ul>
-</section>
-<section id="the-four-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="the-four-exercises">The four exercises</h2>
-<p>The exercises build in two directions at once: from the <strong>local</strong> level (a few people) to the <strong>population</strong> level (a whole network), and from <strong>conceptual</strong> reasoning to <strong>numerical</strong> calculation. Work through them in order, or jump to the track that interests you.</p>
-<div class="roadmap-grid">
-<div class="roadmap-card">
-<p><a href="./ex1-local-conceptual.html"><strong>Exercise 1: The local level, conceptually</strong></a></p>
-<p>Sequential Sam and concurrent Chris, matched on everything but timing, reveal why concurrency shifts risk onto a person’s partners rather than the person themselves.</p>
-</div>
-<div class="roadmap-card">
-<p><a href="./ex2-pop-conceptual.html"><strong>Exercise 2: The population level, conceptually</strong></a></p>
-<p>A 24-person network shows how much farther an infection can travel when partnerships overlap instead of following one another.</p>
-</div>
-<div class="roadmap-card">
-<p><a href="./ex3-local-numerical.html"><strong>Exercise 3: The local level, numerically</strong></a></p>
-<p>The same Sam and Chris comparison, worked out with explicit per-act transmission probabilities and full derivations.</p>
-</div>
-<div class="roadmap-card">
-<p><a href="./ex4-pop-numerical.html"><strong>Exercise 4: The population level, numerically</strong></a></p>
-<p>A full dynamic-network HIV microsimulation you can run and modify, with a companion <a href="https://epimodel.github.io/concurrency.sim">interactive app</a>.</p>
-</div>
-</div>
-<p>If you would like a refresher before the numerical exercises, see the <a href="./prob-tutorial.html">rules of probability</a> and the <a href="./r-tutorial.html">introduction to R</a> in the Background section.</p>
-</section>
-<section id="authors-and-license" class="level2">
-<h2 class="anchored" data-anchor-id="authors-and-license">Authors and license</h2>
-<p>This tutorial was authored by <a href="http://faculty.washington.edu/goodreau/">Steven M. Goodreau</a> (University of Washington), <a href="http://samueljenness.org/">Samuel M. Jenness</a> (Emory University), and <a href="http://faculty.washington.edu/morrism">Martina Morris</a> (University of Washington). It is part of the <a href="https://www.epimodel.org/">EpiModel</a> ecosystem.</p>
-<p>All material is covered by a <a href="https://github.com/EpiModel/ConcurrencyTutorial?tab=GPL-3.0-1-ov-file">GPL-3.0 license</a>. Code can be found in the associated <a href="https://github.com/EpiModel/ConcurrencyTutorial">GitHub repository</a>.</p>
+<p>R is a statistical programming language that combines the data analysis power of a statistics package like Stata, SAS, or SPSS with the flexibility of a computer language like C++. It is free and open-source. Perhaps its greatest feature is that it provides a standardized system for users to share code with one another (through “contributed packages” posted on the R website), so that new users often find that many of their programming tasks have already been completed by others. This allows users to avoid the enormous duplication of effort that has plagued programming (and epidemic modeling) in the past, and instead focus on performing novel work.</p>
+<p><strong>Step 1</strong> in using R is to download and install R. Simply go to http://www.r-project.org, click on “CRAN” on the left, select a site near you, select “Download R” for your platform, and follow the instructions.</p>
+<p><strong>Step 2</strong> is to open R. The details for doing so depend on your system, but are standard for that system. For example, in Windows, you can click on the desktop icon (if you allowed it to be created during installation), or find R in the Programs list. Regardless of your system, you will see the same R logo: a big blue “R”.</p>
+<p><strong>Step 3</strong> is to learn the basics of how R file management works. All of the objects that you produce during a session—things like data tables or other kinds of output—are known as objects. And all of those objects are, by default, stored together in one data file, with the extension .RData. (Note the capital “D”). One can store them differently, if one chooses, but we will go with the default here. Commands can be entered into the command line directly, or they can be loaded in from a text file (which typically has the extension .R).</p>
+<p><strong>Step 4</strong> is to learn a few more things:</p>
+<ol type="1">
+<li><p>The command line is indicated by a “&gt;”.</p></li>
+<li><p>If one types in a command but presses enter before finishing it, the “&gt;” will change to a “+”, indicating that R is expecting more input.</p></li>
+<li><p>The symbol “#” indicates a comment. Any line below that begins with a #, or any portion of a line to the right of a # symbol, will not be processed by R, but is there simply to provide info to the user.</p></li>
+<li><p>Often, when one receives output back from R, it begins with the notation [1]. This just means that the output contains one or more elements, and begins with element 1.</p></li>
+</ol>
+<p><strong>Step 5</strong> is to dive in and explore R, with the code below. Use the copy button at the top right of the code block to copy all the code, and paste it into a separate .R file to run it line by line. Note that any line that begins with a # (or any portion to the right of a #) does not need to be copied or typed in; if one does, it will simply be ignored. This tutorial contains every command that we will be using in our concurrency simulation exercise.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">################################################################# </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># R tutorial</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">#################################################################</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">###### BASICS ########################################################</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Comments begin with a #</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="sc">*</span><span class="dv">2</span>                      <span class="co"># R include basic arithmetical operations, of course</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">3</span>                   <span class="co"># To assign a value to a variable, use &lt;- (Pronounced "gets")</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>a                          <span class="co"># To evaluate an object, type its name</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>a<span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> a<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>b</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>a <span class="sc">==</span> <span class="dv">3</span>                   <span class="co"># To test the value of an object, use ==</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>a<span class="sc">^</span><span class="dv">2</span> <span class="sc">==</span> <span class="dv">8</span>                 <span class="co"># To test the value of an object, use ==</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fl">4.2</span>)           <span class="co"># R also contains many named arithmetical functions.</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()                       <span class="co"># To see the list of objecs that have been created</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="do">###### VECTORS #######################################################</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># R relies heavily on vectors of numbers</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="dv">4</span>,<span class="dv">10</span>)                <span class="co"># To create a vector of one element repeated many times, use "rep".</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">7</span>)  <span class="co"># To create a vector with different elements, use "c" (for combine).</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>d</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">9</span>,<span class="dv">5</span>),<span class="dv">6</span>)        <span class="co"># These can be combined, of course.  </span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>                       <span class="co"># Colon notation gives a vector of sequential integers</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>d[<span class="dv">2</span>]                       <span class="co"># Square brackets pull out elements from a vector – this gets the second element in d</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>d[<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>d[<span class="sc">-</span><span class="dv">2</span>]                      <span class="co"># Negative in a bracket means "eveything but"</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">vector</span>()        <span class="co"># To make a vector but leave it empty for the moment, use vector()</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>f                          <span class="co"># logical(0) just means that this is a vector of length 0</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(d)                <span class="co"># To see the length of a vector, use the length function   </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(d)                  <span class="co"># Basic arithmetic functions for vectors</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>d <span class="sc">==</span> <span class="dv">4</span>                   <span class="co"># Evaluation can be done for vectors too.</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(d<span class="sc">==</span><span class="dv">4</span>)          <span class="co"># Returns the positions of the elements that fulfill a criterion</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="do">###### DATA FRAMES ###################################################</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># R also works with data frames; this is the preferred format for datasets </span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#   (with the standard form of rows as observations, columns as measures).</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)      <span class="co"># When creating data frames, it is useful to assign row names</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>h<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>                         <span class="co"># Columns in data frames are identified by the operator $</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>h<span class="sc">$</span>sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">'F'</span>,<span class="dv">5</span>),<span class="fu">rep</span>(<span class="st">'M'</span>,<span class="dv">5</span>))   </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>h</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>h[<span class="dv">7</span>,]                                        <span class="co"># Pull out a row by position</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>h[,<span class="dv">2</span>]                                        <span class="co"># Pull out a column by position</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>h<span class="sc">$</span>sex                                        <span class="co"># Pull out a column by name</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(h)                                     <span class="co"># Provides the dimensions of a data frame (rows first, columns second)</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(h)[<span class="dv">1</span>]                                  <span class="co"># The outputs of functions are themselves objects, which can be operated on in turn.  R relies heavily on this.</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="do">###### OTHER #########################################################</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (a<span class="sc">&gt;</span><span class="dv">5</span>) {j <span class="ot">&lt;-</span> <span class="dv">99</span>}                       <span class="co"># "If" statements</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>j</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (a<span class="sc">&gt;</span><span class="dv">2</span>) {j <span class="ot">&lt;-</span> <span class="dv">99</span>} <span class="cf">else</span> {j <span class="ot">&lt;-</span> <span class="dv">100</span>}   <span class="co"># "If/else" statements</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>j</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>a                                  <span class="co"># Let’s remind ourselves what the objects a and d equal.</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>d</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>a <span class="sc">==</span> <span class="dv">3</span> <span class="sc">&amp;</span> d[<span class="dv">2</span>] <span class="sc">==</span> <span class="dv">3</span>           <span class="co"># Boolean logic.  &amp; for and, | for or, ! for not.</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span>                           <span class="co"># Loops.  This means the code iside the curly brackets will be run 10 times.  The first time through, z will equal 1.</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (z <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {              <span class="co"># The second time through, z will equal 2, etc.</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> y<span class="sc">+</span>z<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    }           </span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>y</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="cn">NA</span>,<span class="dv">1</span>)                <span class="co"># Missing data: use NA.</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>i<span class="sc">*</span><span class="dv">2</span>                             <span class="co"># Operations on NA will return NA</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>i <span class="sc">==</span> <span class="dv">1</span>                          <span class="co"># Operations on NA will return NA</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>i <span class="sc">%in%</span> <span class="dv">1</span>                        <span class="co"># To override this behavior for ==, use %in% instead.  </span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">9</span>)</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(j)                        <span class="co"># Creates a table of values with frequencies</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="fu">rbinom</span>(<span class="dv">100</span>,<span class="dv">1</span>,<span class="fl">0.3</span>)             <span class="co"># Draws random values from a binomial distribution.  Syntax: rbinom(number_of_samples, numer_of_independent_draws_per_sample, probability_of_success_per_draw)</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>                                  <span class="co"># Try running it multiple times to see the randomness</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">3</span>)</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(j,k)                    <span class="co"># Takes two vectors; returns the elements that are in the first but not in the second.</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(k,j)</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> h[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>m[,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>)</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>h</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>m</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(h,m)                    <span class="co"># Appends one data.frame below another; make sure they have the same number of columns.</span></span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d)                         <span class="co"># Plots data, in a variety of different ways depending on the structure of the data and the arguments passed. </span></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d,k)                       <span class="co"># plot(d) returns a simple series plot, plot(d,k) returns a scatter plot.</span></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co"># that’s all!)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -752,10 +794,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./prob-tutorial.html" class="pagination-link" aria-label="Rules of probability">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Rules of probability</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ex1-local-conceptual.html" class="pagination-link" aria-label="1. Local, conceptual">
-        <span class="nav-page-text">1. Local, conceptual</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./resources.html" class="pagination-link" aria-label="More resources">
+        <span class="nav-page-text">More resources</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
