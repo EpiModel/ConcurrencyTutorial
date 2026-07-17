@@ -38,7 +38,7 @@ website:
             href: ex4-pop-numerical.qmd
       - text: "Summary"
         href: summary.qmd
-      - section: "Background"
+      - section: "Appendix"
         contents:
           - text: "Rules of probability"
             href: prob-tutorial.qmd

@@ -92,7 +92,7 @@ A full dynamic-network HIV microsimulation you can run and modify, with a compan
 
 ::::
 
-If you would like a refresher before the numerical exercises, see the [rules of probability](prob-tutorial.qmd) and the [introduction to R](r-tutorial.qmd) in the Background section.
+If you would like a refresher before the numerical exercises, see the [rules of probability](prob-tutorial.qmd) and the [introduction to R](r-tutorial.qmd) in the Appendix section.
 
 ## Authors and license
 
